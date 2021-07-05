@@ -9,11 +9,11 @@ pipeline {
               """
             }
         }
-      stage('run') {
+        stage('run') {
             steps {
-                sh """
-                docker run --rm hello_there
-                """
+              sh """
+              docker run --rm hello_there
+              """
             }
         }
     }
