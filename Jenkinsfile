@@ -5,7 +5,7 @@ pipeline {
             steps {
               echo 'salut monseur'  
               sh """
-              docker build -t hello_there .
+              docker build -t hello_there
               """
             }
         }
