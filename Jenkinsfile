@@ -4,7 +4,9 @@ pipeline {
         stage('build') {
             steps {
               echo 'salut monseur'  
-              
+              sh """
+                docker build -t hello_there .
+              """
             }
         }
         stage('run') {
