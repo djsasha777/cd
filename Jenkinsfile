@@ -9,10 +9,8 @@ pipeline {
         }
         stage('run') {
             steps {
-              echo 'test run stage'
-              sh """
-                docker run python
-              """
+              echo 'test run python'
+              sh 'docker run python'
             }
         }
     }
