@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python' }
+    }
     stages {
         stage('build') {
             steps {
@@ -10,7 +12,7 @@ pipeline {
         stage('run') {
             steps {
               echo 'test run python'
-              sh 'docker run python'
+              sh 'python --version'
             }
         }
     }
