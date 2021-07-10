@@ -12,9 +12,13 @@ with sqlite3.connect("myhome.db") as connect:
         temperature REAL,
         humidity REAL,
         pressure REAL,
-        pm10 REAL,
-        pm25 REAL,
-        pm100 REAL,
-        water1 REAL
+        latitude REAL,
+        longitude REAL,
+        altitude REAL,
+        time REAL,
+        analog1 REAL,
+        analog2 REAL,
+        digital1 REAL,
+        digital2 REAL
         )""")
     connect.commit()
