@@ -16,9 +16,14 @@ with sqlite3.connect("myhome.db") as connect:
         longitude REAL,
         altitude REAL,
         time REAL,
-        analog1 REAL,
-        analog2 REAL,
-        digital1 REAL,
-        digital2 REAL
+        analog1 INTEGER,
+        analog2 INTEGER,
+        digital1 INTEGER,
+        digital2 INTEGER
         )""")
+    kursor.execute("""CREATE TABLE IF NOT EXISTS relays (
+            relay1 INTEGER,
+            relay2 INTEGER,
+            mode INTEGER
+            )""")
     connect.commit()
