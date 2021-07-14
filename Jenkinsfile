@@ -10,7 +10,7 @@ pipeline {
         stage('run') {
             steps {
               echo 'test run python'
-              sh 'ssh djsasha777@172.22.7.185 \'hostname\''
+              sh 'docker build .'
             }
         }
     }
