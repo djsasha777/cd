@@ -1,5 +1,4 @@
 #!usr/bin/env /python3
-print('hello from python')
 from flask import Flask, jsonify, request
 import sqlite3
 
