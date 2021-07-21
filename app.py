@@ -36,6 +36,9 @@ with sqlite3.connect("myhome.db") as connect:
 
 app = Flask(__name__)
 
+@app.route('/')
+def rootlink():
+    return "this is root"
 
 @app.route('/relays_data', methods=["GET"])
 def get_relays():
@@ -51,6 +54,23 @@ def get_relays():
         print(relays_data)
     return jsonify(relays_data)
 
+@app.route('/change_relays_data', methods=["POST"])
+def post_relays():
+    relays_details = request.get_json()
+    relay1 = relays_details["relay1"]
+    relay2 = relays_details["relay2"]
+    power_mode = relays_details["power_mode"]
+    transfer_mode = relays_details["transfer_mode"]
+
+    with sqlite3.connect("myhome.db") as connect:
+        kursor = connect.cursor()
+
+    kursor.execute(f"UPDATE iot_relays SET relay1 = {relay1}")
+    kursor.execute(f"UPDATE iot_relays SET relay2 = {relay2}")
+    kursor.execute(f"UPDATE iot_relays SET power_mode = {power_mode}")
+    kursor.execute(f"UPDATE iot_relays SET transfer_mode = {transfer_mode}")
+    connect.commit()
+    return True
 
 @app.route('/post_data_from_sensors', methods=["POST"])
 def post_data():
