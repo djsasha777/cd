@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('start') {
             steps {
-              echo 'salut monseur'  
+              echo 'salut monsieur!'
               
             }
         }
@@ -15,7 +15,7 @@ pipeline {
         }
         stage('run app') {
             steps {
-                echo 'test build python'
+                echo 'run my rest api app'
                 sh 'docker-compose -f docker-compose.yaml'
 
             }

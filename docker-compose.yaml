@@ -4,3 +4,4 @@ services:
     ports:
       - "3932:3932"
     image: "myiotappimage"
+    container_name: my-app
