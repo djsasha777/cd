@@ -16,7 +16,7 @@ pipeline {
         stage('run app') {
             steps {
                 echo 'run my rest api app'
-                sh 'docker-compose -f docker-compose.yaml'
+                sh 'docker-compose -f docker-compose.yaml up'
 
             }
         }
