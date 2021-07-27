@@ -19,8 +19,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhubcred', usernameVariable: 'HUB_USER', passwordVariable: 'HUB_TOKEN')]) {
                         sh '''
                             docker login -u $HUB_USER -p $HUB_TOKEN
-                            docker image tag myiotappimage $HUB_USER/myiotappimage
-                            docker image push $HUB_USER/myiotappimage
+                            docker image tag myiotappimage $HUB_USER/myiotappimage:2.0
+                            docker image push $HUB_USER/myiotappimage:2.0
                         '''
                         }
             }
