@@ -8,7 +8,7 @@ run Docker app in osx command
 /Applications/Docker.app/Contents/MacOS/Docker
 
 
-
+iptables -t nat -A PREROUTING -d 172.22.7.185 -p tcp --dport 6060 -j DNAT --to-destination 192.168.1.187:6060
 
 
 
