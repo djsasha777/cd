@@ -57,4 +57,4 @@ def update_sensors(id):
 
 if __name__ == "__main__":
     print("Ready to start app...")
-    app.run(host='0.0.0.0', port=3939, debug=False)
+    app.run(host='0.0.0.0', port=8088, debug=False)

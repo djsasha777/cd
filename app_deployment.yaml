@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-IOTimage-KUBE-run
+  labels:
+    name: myappIOTimage
+    app: myappIOTimage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myappIOTimage
+  template:
+    metadata:
+      labels:
+        app: myappIOTimage
+    spec:
+      containers:
+      - name: myappIOTimage
+        image: https://hub.docker.com/r/djsasha777/IOTimage
+        ports:
+        - containerPort: 8088
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: mongo-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: mongo-root-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: myappIOTimage
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8088
