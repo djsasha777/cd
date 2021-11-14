@@ -3,7 +3,7 @@ from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
 app.config['MONGODB_SETTINGS'] = {
-    'db':'db_name',
+    'db':'IOTdatabase',
     'host':'localhost',
     'port':'27017'
 }
