@@ -4,9 +4,13 @@ My iot project with CI/CD integration and running in Kubernetes cluster
 
 KUBE running:
 
-kubectl create ns open5gs
+kubectl create ns iotnamespace
 
 kubectl apply -f IOT/
+.
+.
+.
+.
 
 run Docker app in osx command:
 /Applications/Docker.app/Contents/MacOS/Docker
