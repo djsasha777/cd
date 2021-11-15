@@ -20,7 +20,7 @@ pipeline {
                         sh '''
                             echo $DOCKERHUB_PASS | docker login --username $DOCKERHUB_LOGIN --password-stdin
                             docker image tag iotimage iotimage:1.0
-                            docker image push $DOCKERHUB_LOGIN/iotimage:1.0
+                            docker image push iotimage:1.0
                         '''
                         }
             }
