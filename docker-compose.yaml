@@ -1,7 +1,0 @@
-version: "3.9"
-services:
-  mypyapp:
-    ports:
-      - "3932:3932"
-    image: "myiotappimage"
-    container_name: my-app
