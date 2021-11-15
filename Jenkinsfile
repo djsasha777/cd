@@ -18,7 +18,7 @@ pipeline {
                 echo 'pushing to docker hub'
                 withCredentials([usernamePassword(credentialsId: 'dockerhubcred', usernameVariable: 'DOCKERHUB_LOGIN', passwordVariable: 'DOCKERHUB_PASS')]) {
                         sh '''
-                            docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASS --password-stdin
+                            echo $DOCKERHUB_PASS | docker login --username $DOCKERHUB_LOGIN --password-stdin
                             docker image tag iotimage iotimage:1.0
                             docker image push $DOCKERHUB_LOGIN/iotimage:1.0
                         '''
