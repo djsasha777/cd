@@ -31,16 +31,29 @@ PCB Layout of device:
 jenkins server in docker
 
 version: "3.9"
+
 services:
+
   jenkins:
+  
       image: jenkins/jenkins:lts-jdk11
+      
       privileged: true
+      
       user: root
+      
       ports:
+      
         - 8083:8080
+        
         - 50003:50000
+        
       container_name: my-jenkins
+      
       volumes:
+      
         - ~/jenkins:/var/jenkins_home
+        
         - /var/run/docker.sock:/var/run/docker.sock
+        
         - /usr/bin/docker:/usr/bin/docker
