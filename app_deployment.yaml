@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-IOTimage-KUBE-run
+  name: my-iot-run
   namespace: iotnamespace
   labels:
-    name: myappIOTimage
-    app: myappIOTimage
+    name: myappiotimage
+    app: myappiotimage
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: myappIOTimage
+      app: myappiotimage
   template:
     metadata:
       labels:
-        app: myappIOTimage
+        app: myappiotimage
     spec:
       containers:
-      - name: myappIOTimage
+      - name: myappiotimage
         image: https://hub.docker.com/repository/docker/djsasha777/iotimage
         ports:
         - containerPort: 8088
@@ -40,7 +40,7 @@ metadata:
   namespace: iotnamespace
 spec:
   selector:
-    app: myappIOTimage
+    app: myappiotimage
   ports:
     - protocol: TCP
       port: 80
