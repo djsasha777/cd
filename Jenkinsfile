@@ -20,7 +20,7 @@ pipeline {
                         sh '''
                             echo $DOCKERHUB_PASS | docker login --username $DOCKERHUB_LOGIN --password-stdin
 
-                            docker image push iotimage
+                            docker image push $DOCKERHUB_LOGIN/iotimage
                         '''
                         }
             }
