@@ -16,11 +16,11 @@ pipeline {
         stage('push'){
             steps {
                 echo 'pushing to docker hub'
-                withCredentials([usernamePassword(credentialsId: 'dockerhubcred', usernameVariable: 'HUB_USER', passwordVariable: 'HUB_TOKEN')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhubcred', usernameVariable: 'DOCKERHUB_LOGIN', passwordVariable: 'DOCKERHUB_PASS')]) {
                         sh '''
-                            docker login -u $HUB_USER -p $HUB_TOKEN
+                            docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASS
                             docker image tag iotimage $HUB_USER/iotimage:1.0
-                            docker image push $HUB_USER/iotimage:1.0
+                            docker image push $DOCKERHUB_LOGIN/iotimage:1.0
                         '''
                         }
             }
