@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: myappIOTimage
-        image: https://hub.docker.com/r/djsasha777/IOTimage
+        image: https://hub.docker.com/repository/docker/djsasha777/iotimage
         ports:
         - containerPort: 8088
         env:
