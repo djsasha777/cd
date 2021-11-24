@@ -7,6 +7,13 @@ pipeline {
               
             }
         }
+        stage('start docker daemon') {
+            steps {
+              echo 'starting docker daemon...'
+              sh 'systemctl start docker'
+
+            }
+        }
         stage('build') {
             steps {
               echo 'build docker image'
@@ -20,15 +27,19 @@ pipeline {
                         sh '''
                             echo $DOCKERHUB_PASS | docker login --username $DOCKERHUB_LOGIN --password-stdin
                             docker image tag iotimage $DOCKERHUB_LOGIN/iotimage:3.0
-                            docker image push $DOCKERHUB_LOGIN/iotimage:2.0
+                            docker image push $DOCKERHUB_LOGIN/iotimage:3.0
                         '''
                         }
             }
         }
         stage('run app') {
             steps {
-                echo 'run my rest api app'
-                sh 'docker run -p 80:8088 -d iotimage'
+                echo 'run my app in kubernetes'
+                sh 'minikube start'
+                sh 'cd IOT'
+                sh 'git pull'
+                sh 'cd ..'
+                sh 'kubectl apply -f IOT/'
             }
         }
     }
