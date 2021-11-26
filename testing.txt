@@ -1,0 +1,10 @@
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"device": 10025, "relay1": false, "relay2": true, "power_mode": 1, "transfer_mode": 1}' \
+    0.0.0.0:8088/addrelay/
+
+
+
+
+curl -X PUT -H "Content-Type: application/json" \
+    -d '{"power_mode": 77, "transfer_mode": 77}' \
+    0.0.0.0:8088/setrelay/10025
