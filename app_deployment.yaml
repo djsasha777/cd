@@ -46,7 +46,9 @@ metadata:
 spec:
   selector:
     app: myappiotimage
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8088
       targetPort: 8088
+      nodePort: 8088
