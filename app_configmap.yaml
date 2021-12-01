@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap
+  namespace: iotnamespace
+data:
+  mainconfig.cfg: |
+    MONGODB_DB = 'iotdatabase'
+    MONGODB_HOST = '0.0.0.0'
+    MONGODB_PORT = 27017
+    MONGODB_USERNAME = 'user'
+    MONGODB_PASSWORD = 'gorizont'
