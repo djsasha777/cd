@@ -4,10 +4,4 @@ metadata:
   name: app-configmap
   namespace: iotnamespace
 data:
-  /IOTimage/mainconfig.cfg: |
-    ['MONGODB_SETTINGS']
-    MONGODB_DB = 'iotdatabase'
-    MONGODB_HOST = '0.0.0.0'
-    MONGODB_PORT = 27017
-    MONGODB_USERNAME = 'ZGpzYXNoYTc3Nw=='
-    MONGODB_PASSWORD = 'RmluZ2F6MzkyMg=='
+  databasename: "iotdatabase"

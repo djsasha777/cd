@@ -22,21 +22,26 @@ spec:
         ports:
         - containerPort: 8088
         env:
-        - name: MONGO_INITDB_ROOT_USERNAME
+        - name: MONGO_MONGODB_USERNAME
           valueFrom:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-username
-        - name: MONGO_INITDB_ROOT_PASSWORD
+        - name: MONGO_MONGODB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-password
-        - name: ME_CONFIG_MONGODB_SERVER
+        - name: MONGO_MONGODB_SERVER
           valueFrom:
             configMapKeyRef:
               name: mongodb-configmap
               key: database_url
+        - name: MONGO_MONGODB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: app-configmap
+                key: databasename
 ---
 apiVersion: v1
 kind: Service

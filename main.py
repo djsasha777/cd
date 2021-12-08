@@ -1,8 +1,19 @@
 from flask import Flask, jsonify, request
 from flask_mongoengine import MongoEngine
+import  os
 
 app = Flask(__name__)
-app.config.from_pyfile('mainconfig.cfg')
+myusername = os.environ['MONGO_MONGODB_USERNAME']
+mypassword = os.environ['MONGO_MONGODB_PASSWORD']
+mydatabaseserver = os.environ['MONGO_MONGODB_SERVER']
+mydatabasename = os.environ['MONGO_MONGODB_DATABASE']
+app.config['MONGODB_SETTINGS'] = {
+    'db': mydatabasename,
+    'username':myusername,
+    'password':mypassword,
+    'host': mydatabaseserver,
+    'port': 27017
+}
 
 db = MongoEngine(app)
 
@@ -27,10 +38,14 @@ class Relays(db.Document):
     power_mode = db.IntField()
     transfer_mode = db.IntField()
 
-@app.route('/')
-def hello_page():
+@app.route('/test')
+def test_page():
     startpage = Relays.objects()
     return  jsonify(startpage), 200
+
+@app.route('/')
+def hello_page():
+    return 'Hello, page from flask!'
 
 @app.route('/getsensor/<id>')
 def  get_sensors(id: str):

@@ -8,3 +8,16 @@ curl -X POST -H "Content-Type: application/json" \
 curl -X PUT -H "Content-Type: application/json" \
     -d '{"power_mode": 77, "transfer_mode": 77}' \
     0.0.0.0:8088/setrelay/10025
+
+
+
+
+
+
+mongosh create user
+
+db.createUser(
+{	user: "user",
+	pwd: "pass",
+
+	roles:[{role: "userAdminAnyDatabase" , db:"iotdatabase"}]})
