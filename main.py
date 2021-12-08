@@ -3,10 +3,10 @@ from flask_mongoengine import MongoEngine
 import  os
 
 app = Flask(__name__)
-myusername = os.getenv('MONGO_MONGODB_USERNAME')
-mypassword = os.getenv('MONGO_MONGODB_PASSWORD')
-mydatabaseserver = os.getenv('MONGO_MONGODB_SERVER')
-mydatabasename = os.getenv('MONGO_MONGODB_DATABASE')
+myusername = os.getenv('mongoenvusername')
+mypassword = os.getenv('mongoenvpassword')
+mydatabaseserver = os.getenv('mongoenvserver')
+mydatabasename = os.getenv('mongoenvdatabase')
 
 app.config['MONGODB_DB'] = mydatabasename
 app.config['MONGODB_HOST'] = mydatabaseserver
