@@ -38,10 +38,10 @@ spec:
               name: mongodb-configmap
               key: database_url
         - name: MONGO_MONGODB_DATABASE
-            valueFrom:
-              configMapKeyRef:
-                name: app-configmap
-                key: databasename
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: databasename
 ---
 apiVersion: v1
 kind: Service
