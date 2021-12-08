@@ -3,16 +3,16 @@ from flask_mongoengine import MongoEngine
 import  os
 
 app = Flask(__name__)
-myusername = os.getenv('mongoenvusername')
-mypassword = os.getenv('mongoenvpassword')
-mydatabaseserver = os.getenv('mongoenvserver')
-mydatabasename = os.getenv('mongoenvdatabase')
+username = os.getenv('MONGO_MONGODB_USERNAME')
+password = os.getenv('MONGO_MONGODB_PASSWORD')
+server = os.getenv('MONGO_MONGODB_SERVER')
+database = os.getenv('MONGO_MONGODB_DATABASE')
 
-app.config['MONGODB_DB'] = mydatabasename
-app.config['MONGODB_HOST'] = mydatabaseserver
+app.config['MONGODB_DB'] = database
+app.config['MONGODB_HOST'] = server
 app.config['MONGODB_PORT'] = 27017
-app.config['MONGODB_USERNAME'] = myusername
-app.config['MONGODB_PASSWORD'] = mypassword
+app.config['MONGODB_USERNAME'] = username
+app.config['MONGODB_PASSWORD'] = password
 
 db = MongoEngine(app)
 
