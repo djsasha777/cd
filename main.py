@@ -7,12 +7,20 @@ username = os.getenv('MONGO_MONGODB_USERNAME')
 password = os.getenv('MONGO_MONGODB_PASSWORD')
 server = os.getenv('MONGO_MONGODB_SERVER')
 database = os.getenv('MONGO_MONGODB_DATABASE')
+port = '27017'
 
-app.config['MONGODB_DB'] = database
-app.config['MONGODB_HOST'] = server
-app.config['MONGODB_PORT'] = 27017
-app.config['MONGODB_USERNAME'] = username
-app.config['MONGODB_PASSWORD'] = password
+#for local docker
+
+#username = 'djsasha777'
+#password = 'Fingaz3922'
+#server = '0.0.0.0'
+#database ='iotdatabase'
+#port = '27017'
+
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'iotdatabase',
+    'host': "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(username, password, server, port, database)
+}
 
 db = MongoEngine(app)
 
