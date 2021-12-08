@@ -3,17 +3,16 @@ from flask_mongoengine import MongoEngine
 import  os
 
 app = Flask(__name__)
-myusername = os.environ['MONGO_MONGODB_USERNAME']
-mypassword = os.environ['MONGO_MONGODB_PASSWORD']
-mydatabaseserver = os.environ['MONGO_MONGODB_SERVER']
-mydatabasename = os.environ['MONGO_MONGODB_DATABASE']
-app.config['MONGODB_SETTINGS'] = {
-    'db': mydatabasename,
-    'username':myusername,
-    'password':mypassword,
-    'host': mydatabaseserver,
-    'port': 27017
-}
+myusername = os.getenv('MONGO_MONGODB_USERNAME')
+mypassword = os.getenv('MONGO_MONGODB_PASSWORD')
+mydatabaseserver = os.getenv('MONGO_MONGODB_SERVER')
+mydatabasename = os.getenv('MONGO_MONGODB_DATABASE')
+
+app.config['MONGODB_DB'] = mydatabasename
+app.config['MONGODB_HOST'] = mydatabaseserver
+app.config['MONGODB_PORT'] = 27017
+app.config['MONGODB_USERNAME'] = myusername
+app.config['MONGODB_PASSWORD'] = mypassword
 
 db = MongoEngine(app)
 
@@ -38,12 +37,12 @@ class Relays(db.Document):
     power_mode = db.IntField()
     transfer_mode = db.IntField()
 
-@app.route('/test')
+@app.route('/')
 def test_page():
     startpage = Relays.objects()
     return  jsonify(startpage), 200
 
-@app.route('/')
+@app.route('/test')
 def hello_page():
     return 'Hello, page from flask!'
 
