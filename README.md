@@ -7,6 +7,10 @@ KUBE running:
 kubectl create ns iotnamespace
 
 kubectl apply -f IOT/
+
+For exposing minikube address and port to local browser
+
+minikube service my-service -n iotnamespace 
 .
 .
 .
