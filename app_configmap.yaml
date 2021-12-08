@@ -4,4 +4,4 @@ metadata:
   name: app-configmap
   namespace: iotnamespace
 data:
-  databasename: "iotdatabase"
+  databasename: iotdatabase
