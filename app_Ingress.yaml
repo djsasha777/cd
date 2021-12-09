@@ -36,3 +36,31 @@ spec:
             name: my-service
             port:
               number: 8088
+      - pathType: Prefix
+        path: "/setrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addrelay/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addsensor/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
