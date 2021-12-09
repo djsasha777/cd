@@ -9,5 +9,6 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: my-service
-          servicePort: 8088
+          service:
+            - name: my-service
+            - port: 8088
