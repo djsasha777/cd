@@ -4,6 +4,10 @@ metadata:
   name: app-ingress
   namespace: iotnamespace
 spec:
+  tls:
+    -host:
+      - djsashaiot.com
+      secretName: app-secret
   rules:
   - host: "djsashaiot.com"
     http:
