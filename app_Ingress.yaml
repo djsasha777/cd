@@ -5,10 +5,34 @@ metadata:
   namespace: iotnamespace
 spec:
   rules:
-  - host: djsasha777iot.xyz
+  - host: "djsashaiot.com"
     http:
       paths:
-      - backend:
+      - pathType: Prefix
+        path: "/"
+        backend:
           service:
-            - name: my-service
-            - port: 8088
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/test"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
