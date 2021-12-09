@@ -5,7 +5,7 @@ metadata:
   namespace: iotnamespace
 spec:
   tls:
-    -host:
+    - host:
       - djsashaiot.com
       secretName: app-secret
   rules:
