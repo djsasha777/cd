@@ -25,7 +25,7 @@ app.config['MONGODB_SETTINGS'] = {
 }
 
 db = MongoEngine(app)
-
+#metrics
 metrics = PrometheusMetrics(app)
 
 class Sensors(db.Document):
