@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_mongoengine import MongoEngine
 from prometheus_flask_exporter import PrometheusMetrics
 
-import  os
+import os
 
 app = Flask(__name__)
 username = os.getenv('MONGO_MONGODB_USERNAME')
@@ -10,14 +10,6 @@ password = os.getenv('MONGO_MONGODB_PASSWORD')
 server = os.getenv('MONGO_MONGODB_SERVER')
 database = os.getenv('MONGO_MONGODB_DATABASE')
 port = '27017'
-
-#for local docker
-
-#username = 'djsasha777'
-#password = 'Fingaz3922'
-#server = '0.0.0.0'
-#database ='iotdatabase'
-#port = '27017'
 
 app.config['MONGODB_SETTINGS'] = {
     'db': 'iotdatabase',

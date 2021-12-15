@@ -6,7 +6,7 @@ metadata:
   labels:
     release: monitoring
     app: myappiotimage
-specs:
+spec:
   endpoints:
   - path: /metrics
     port: myappserviceport
