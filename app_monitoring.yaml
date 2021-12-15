@@ -12,8 +12,8 @@ spec:
     port: myappserviceport
     targetPort: 8088
   namespaceSelector:
-    matchNames:
-    - iotnamespace
+    #matchNames:
+    any: true
   selector:
     matchLabels:
       app: myappiotimage
