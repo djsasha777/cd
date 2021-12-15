@@ -9,7 +9,7 @@ spec:
   endpoints:
   - path: /metrics
     port: myappserviceport
-    targetPort: 3000
+    targetPort: 8088
   namespaceSelector:
     matchNames:
     - iotnamespace
