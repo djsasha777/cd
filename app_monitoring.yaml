@@ -8,7 +8,7 @@ metadata:
     app: myappiotimage
 spec:
   endpoints:
-    port: myappserviceport
+    - port: myappserviceport
   namespaceSelector:
     matchNames:
     - myappiotimage
