@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_mongoengine import MongoEngine
+from prometheus_flask_exporter import PrometheusMetrics
+
 import  os
 
 app = Flask(__name__)
@@ -23,6 +25,8 @@ app.config['MONGODB_SETTINGS'] = {
 }
 
 db = MongoEngine(app)
+
+metrics = PrometheusMetrics(app)
 
 class Sensors(db.Document):
     device = db.IntField()
