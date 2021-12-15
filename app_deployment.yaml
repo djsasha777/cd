@@ -53,7 +53,8 @@ spec:
     app: myappiotimage
   type: LoadBalancer
   ports:
-    - protocol: TCP
-      port: 8088
-      targetPort: 8088
-      nodePort: 30888
+  - name: myappserviceport
+    protocol: TCP
+    port: 8088
+    targetPort: 8088
+    nodePort: 30888
