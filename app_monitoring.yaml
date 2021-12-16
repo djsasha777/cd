@@ -9,7 +9,7 @@ metadata:
 spec:
   endpoints:
     - path: /metrics
-      port: myappserviceport
+      port: my-service
       targetPort: 8088
   namespaceSelector:
     matchNames:
