@@ -48,6 +48,9 @@ kind: Service
 metadata:
   name: my-service
   namespace: iotnamespace
+  labels:
+    name: myappiotimage
+    app: myappiotimage
 spec:
   selector:
     app: myappiotimage
