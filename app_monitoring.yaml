@@ -9,11 +9,11 @@ metadata:
 spec:
   endpoints:
     - path: /metrics
-      port: "8088"
+      port: myappserviceport
       targetPort: 8088
   namespaceSelector:
     matchNames:
-    - myappiotimage
+    - iotnamespace
   selector:
     matchLabels:
       app: myappiotimage
