@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: myappiotimage
-        image: djsasha777/iotimage:9.0
+        image: djsasha777/iotimage:lts
         ports:
         - containerPort: 8088
         env:
