@@ -1,0 +1,177 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap
+  namespace: iotnamespace
+data:
+  databasename: iotdatabase
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-iot-run
+  namespace: iotnamespace
+  labels:
+    name: myappiotimage
+    app: myappiotimage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myappiotimage
+  template:
+    metadata:
+      labels:
+        app: myappiotimage
+    spec:
+      containers:
+      - name: myappiotimage
+        image: djsasha777/iotimage:lts
+        ports:
+        - containerPort: 8088
+        env:
+        - name: MONGO_MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
+        - name: MONGO_MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
+        - name: MONGO_MONGODB_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: mongodb-configmap
+              key: database_url
+        - name: MONGO_MONGODB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: app-configmap
+              key: databasename
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: iotnamespace
+  labels:
+    name: myappiotimage
+    app: myappiotimage
+spec:
+  selector:
+    app: myappiotimage
+  type: LoadBalancer
+  ports:
+  - name: myappserviceport
+    protocol: TCP
+    port: 8088
+    targetPort: 8088
+    nodePort: 30888
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: iotnamespace
+spec:
+  tls:
+    - hosts:
+      - djsashaiot.com
+      secretName: app-secret
+  rules:
+  - host: "djsashaiot.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/test"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addrelay/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addsensor/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: my-iot-service-monitor
+  namespace: iotnamespace
+  labels:
+    release: stable
+    app: myappiotimage
+spec:
+  endpoints:
+    - path: /metrics
+      port: myappserviceport
+      targetPort: 8088
+  namespaceSelector:
+    matchNames:
+    - iotnamespace
+  selector:
+    matchLabels:
+      app: myappiotimage
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+  namespace: iotnamespace
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZhakNDQTFJQ0NRQ0ZQeHc5NkkwbVJ6QU5CZ2txaGtpRzl3MEJBUXNGQURCM01Rc3dDUVlEVlFRR0V3SnkKZFRFTE1Ba0dBMVVFQ0F3Q2EzSXhEakFNQmdOVkJBY01CWE52WTJocE1SQXdEZ1lEVlFRS0RBZGthbk5oYzJoaApNUW93Q0FZRFZRUUxEQUZoTVFvd0NBWURWUVFEREFGaE1TRXdId1lKS29aSWh2Y05BUWtCRmhKa2FuTmhjMmhoCk56YzNRRzFoYVd3dWNuVXdIaGNOTWpFeE1qQTVNRFV6TlRJNFdoY05Nakl4TWpBNU1EVXpOVEk0V2pCM01Rc3cKQ1FZRFZRUUdFd0p5ZFRFTE1Ba0dBMVVFQ0F3Q2EzSXhEakFNQmdOVkJBY01CWE52WTJocE1SQXdEZ1lEVlFRSwpEQWRrYW5OaGMyaGhNUW93Q0FZRFZRUUxEQUZoTVFvd0NBWURWUVFEREFGaE1TRXdId1lKS29aSWh2Y05BUWtCCkZoSmthbk5oYzJoaE56YzNRRzFoYVd3dWNuVXdnZ0lpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElDRHdBd2dnSUsKQW9JQ0FRRE1BSExtR3RKTUVWRThiR3RPdm93cHI3RXhOaWc5WWUvVmluZnR1SWc3YzZMdkpzLzdMb3N1c2hJaApEVy9sZHdxK1diQUwvTlY0ekl3V1FvaVZacUVXdkZ5L3U0K3BmaUZlSlpvMmt0UXVTcUZvVHl6TUhzaUlNdmNUCnA3OGowTTJZWTBjOVBOd04vd2NUeFNtMWEwQkpTeWZOV3dTOE56Zm1rU244c1BXVXNpU2RRMWtyZEN1cmh0aloKKzVtS2R2a2lOMnBFUDZoQ0hoVGk2eVJ5c1hySlNwRkVJd1l0Q0REVGUwYndESVhOU0s1QWJGYmpaaFV1NWs3YgpaZXdOR2p3VHY4VXJSWGlrMGVSZlJGc1NuWG1RVm4xdnFpNzVpajc1ZnlBOXgzK3RqaTFrelNCRlkxNyt2UW8vCkkrQU9BYTVPODYwd0VYN1BCSWlEN3VqNUUvUEZNUHdJeUlTWi9KL1E4QjZkUmxMZFl6bHVxMTBrVTVYWC81S2sKUktseUQ2TWsyVWJSRWYrM3gxUDRZUjRSUGt4NkF0a3dhVnl1RUVzNk9oeTNLUnJLWVdudHhZZTJZbXdCMjd5YQptcURGUVExNlljZ1RBYnI1QldhVTk0V2k0Tk11M2s2L21aVXlwL0JLOWEvaDk0VFFKc2x4eDRQT0FEaE5lY2JDCkdSL0t0RFh3YkxlTm51NGx5RS9FcGpMaXlLRzl2MkdKN0IremFLTWhvTEJCM1gvb0ZLWHQzTStjdTFLYkFhbGEKS0R0a1puSHhDUFhEdExuVDRlTUxvUXpCRzM0UlpIVytnc0JyT1ZaMUdyV1ZQRHRCbXVrTE4rNU40SDFrNmV1VgoxYTBxS1E2TFNhZjV5VnFoSFRqQjd2L3ZsMHlQdDY4MDJYd01MUElFTS9JMlp5b0xLd0lEQVFBQk1BMEdDU3FHClNJYjNEUUVCQ3dVQUE0SUNBUUJWdXBDMWFXZ0l5N1JxeGRSNHlOd0UxdjVsYk1JZjRBYnUrZDYxNDdKbzQ2TlkKdTlMV0hVby9TTUtxWTc3SEt4dERQWkxoSUIxUTdKcm1tV3B4WlZEN29qMVExUjJIVlM5MTRuWTZDbUF1QkNHRApQTHZPclpiM2x2S2h0QWc4WHkwUGswd2xRU1p1bGJPZ1FocEUzK1R2anRwTjlHYmhyTWh3QW9DRWpibVJGUkdEClZUZ3JJSVpjeGNpNDNEVGtlL2w2VXJPdTFxVHFTeC9ueEdHSTdZVk9WM3pTQVpWSDRtVm9zS0tWV2ltb0VKWkIKckpoQWxtbWhndU9qUjZEREhFM1Y4ZTNFL0tJYW9zQU5nL3FjUkJaR1JUT080YVBKZWttbDkrT29WSW9hQldxWQpuM1VLWlBPell3VFRHZjhTSFphVEFuekJ0SjJoYkhzL0o1ZHZHaHhvaEJpM21MUXZKQTFkQzlGSm1BcXRsdFo2Cnk5THBQVTNrc1A4QnpIZ0gxdWNxbE1BZG9zeHhycUNOOStTQTJlZzE1UWdQTHlEOVZUV1J5Z1dLTGNrYnNNSzkKYXpDL2ZZd0V1TEdIK0RiZ0M3OGJtRjcrUU9rUFVWaWdwQ1k3QnBqQ0V0SjdkQXB0b09sckRMamtlemIrdnEzTApOYlpPNVFTV3ZoaEdWQ21MYy82YndnbmtjaDJyMkRSZ1BpYi95L0JyRkZ0dkg3TnVXR25uUmU0T1lva3E3LzJCCkFYMFBYczJTOXNJVXlweEVMaFpLNGtsTVZHMi9ZNHprWE1UUHZ1VFZDTHNDc3c0NVJid3pacUFpVlZESDNIMmkKRUxPSVNaYWZVV0R1ZVRCUUVuS2lPWTVHM3VLdjZTRW1EUE9MZE1wdU1mUi8ybWFkVUJzSGF2SVlRdm1sd1E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUpRZ0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQ1N3d2dna29BZ0VBQW9JQ0FRRE1BSExtR3RKTUVWRTgKYkd0T3Zvd3ByN0V4TmlnOVllL1ZpbmZ0dUlnN2M2THZKcy83TG9zdXNoSWhEVy9sZHdxK1diQUwvTlY0ekl3VwpRb2lWWnFFV3ZGeS91NCtwZmlGZUpabzJrdFF1U3FGb1R5ek1Ic2lJTXZjVHA3OGowTTJZWTBjOVBOd04vd2NUCnhTbTFhMEJKU3lmTld3UzhOemZta1NuOHNQV1VzaVNkUTFrcmRDdXJodGpaKzVtS2R2a2lOMnBFUDZoQ0hoVGkKNnlSeXNYckpTcEZFSXdZdENERFRlMGJ3RElYTlNLNUFiRmJqWmhVdTVrN2JaZXdOR2p3VHY4VXJSWGlrMGVSZgpSRnNTblhtUVZuMXZxaTc1aWo3NWZ5QTl4Myt0amkxa3pTQkZZMTcrdlFvL0krQU9BYTVPODYwd0VYN1BCSWlECjd1ajVFL1BGTVB3SXlJU1ovSi9ROEI2ZFJsTGRZemx1cTEwa1U1WFgvNUtrUktseUQ2TWsyVWJSRWYrM3gxUDQKWVI0UlBreDZBdGt3YVZ5dUVFczZPaHkzS1JyS1lXbnR4WWUyWW13QjI3eWFtcURGUVExNlljZ1RBYnI1QldhVQo5NFdpNE5NdTNrNi9tWlV5cC9CSzlhL2g5NFRRSnNseHg0UE9BRGhOZWNiQ0dSL0t0RFh3YkxlTm51NGx5RS9FCnBqTGl5S0c5djJHSjdCK3phS01ob0xCQjNYL29GS1h0M00rY3UxS2JBYWxhS0R0a1puSHhDUFhEdExuVDRlTUwKb1F6QkczNFJaSFcrZ3NCck9WWjFHcldWUER0Qm11a0xOKzVONEgxazZldVYxYTBxS1E2TFNhZjV5VnFoSFRqQgo3di92bDB5UHQ2ODAyWHdNTFBJRU0vSTJaeW9MS3dJREFRQUJBb0lDQURmM3Q0NGh0YWhnNStTbjZoakVkamZKCmw5ZGtnRTIyM05HOUY0SUVxbnVGRWlLQ2gzVG1KQkUva1hHMytnYitUZGhEU3VVL0RHSUQzRHNQTGVHdk1tckcKYXJ1L2ZYNkd1Q2pZTUNMZ3pZMlZ0QXFtRGloQ0djb2tFVjAzSEYxN0g2eTdNQVJBK2k1czFVZzdRMkllZHBpbApJZHBaS2tkbzd0RTI2a29GVXByazlONmdaNHBnYU1xNlNDd2x0czRpTGQrUlRIcEU3S2lYRUN2aFR6S1lOcE9hCi9aZXY5RFhPbFhhdno1cDBGUkZvNjBXSmM1MFhtS0F4VjFraDhVejI4WnlKZEZLVzBLNkhWeHc3NkxDR3U1ODUKMjFnVFhLZmhvYjFaZjBMenhMZWMxaDlkbDRqeDVsSUZFeGFYaFJUU3FUdkg1cS9WWFBEMjBXMUEwbkhqWTNFcwp3YjQrVEl2VTlUczNrY000c1N2dVhFaFVTTGh5R0pkdmtuT2VhRmZjZjBSNFdkSzBuL2RidnlWVlIzVG1IeDBCCkdQK0pBTWpZUTVGT3h2bDBPeUNRc24yTGFxVE4wQUZRQ0JtMXYvb3FQaHpxWHgycFpZUmZWRy9raWRPOXZDNTgKVUtXZUZFZURMS0NiQ2trMW1LSTdkTXVkRWc0VEFuclh4eE1FTjBNaUNMRWRiMklGUFZ3TzdoYjh3Y0JXVG9pcgo5SFpaT2ZEMHZPNEhEOVZxMlhVTTVqbFZWNGlhaFF4eXZnZmJVdnNXdTI4R2Ird00yVFpZbk9RemY5YXVabitoCjVEUm9sRWVKRWY1VWxCTWVXOW1BaEZNTDc4MndBTDI0bDg0ckxJWkpIZExlUTRRSjJacU54cGJXVWh2dUk5eXMKK3NrcURrWWRJSzgvQnlXV1JYWWhBb0lCQVFEb2I4OENRdGlsRVdnK0FaTGYyajdOb2x3RG9oeStOV3YzU0xVLwppV016VjZ0cTI4WTdNdVRLSmV1ZEZTb040M29nUkJoMDF2S0srOVVwQjRUVUZmU3hJdEFJYzYvUFFZbzB0Nmk5CmVhVzNoYTdhR2JUblI5QWd6eS9XTk04R0FUem0weFJQOUlzbThWMm5YTmZZdHZKMEo3WERadXpkS2NQUllJKzUKeHFNaldIUjhQZnZmVW0vZGw3emxtTGpLandrTnRJZ2tkd3piUmt5RGlENTIvOWpocWQ3bmVyOVBlU3RubU5McQpSa1FrSGs0TXVWUzdBY1hGbHpxYVVKRkFTSUtDTldxbGVBYUlEek1HU2hQQVJNSmhtbjZ5SENMOTcxUlluV00rClZlODZ2UkpwODUrT0l6YTZ1aHEwZzFoM1RFQWVQRElFVmI3dUV5Vk5jVFZqZERVUEFvSUJBUURncnJJcnRMWVoKM0tpa1FwYmR4OFlzT2I4MlV1a2hoV3RLSjlTeUpYNC9PNjlRUWY1R1ZOT0JjYkdVVERDRllmTXVoekF3TkNhVApiYXZFbDQ2TWlmcEJIdUJDa2trV3FDeGNjdVVGOXFoNXdEQ09acW9SK2NUOG5SbndlN1ZrUHkwaUNlaDQ3WVJmClJ6UFJSZS9kOTJMMjdtZkIyb3JXMk00eU1qZHppS2wwai92K2w0aXZLR3ZDMGw4d3V3S0dGMGJNUVo2TGtmUGEKNTVYbHFJd3BTdXluRUQ2aUswTWJ6dHVIZG40Y1FpWGZlcEVoOUJHZXNRRW9DZ1p4SHdaYy9JVWpzUTlsanoxOQpmTEFUSWZ3ZjRzc2l5T050azJJVEN5b0JsK2xPNm90d0hGWUVrMWdwWGZkb093clRLWGNPc05LVDBaUDk0Ti9uCjYvYmhvUUNZZTZBbEFvSUJBSHRyZXlENU82NFNteVpwa1lLWmtVV0JVNWgrU1FMYXZQUjJQLzkzeFJ2ckRsTlUKVldMenVEWjZnaXhMbzZQeVNOTy9OTGs5dFZZRk9IOXJ4YVVUNzNUclJrbG1uRkRSdlVBVzBWdWlyMUxPZ2pTKwo5NmJqSStsMytpK2twTlRNYlhrblZaN0srK1IydjBMeDhvN1pQYzVkazQ4cEpOYWVxYUtRd21CajBCWWhqdUMxCnpQc2MrOWRQRGZkZjY2ZHE0ZVRNR29vNlNMSmFGcUMxQkc0TmxpemxGVDRXbUdUcnN4ZDBOM0k4VTB4V1p4MHMKZjRnNC9ibllmajZZVHpneUNGSjVhS0pxSkJXMDlHUC9pNU5KTDJuQ0xrb0cxTEcvbGlyamoySDNJV3N3SUFudwpXYVdRbnl2eFMrTFQ1M0taSTJhcWtlaHBXMU54Q1JxZzVUZGs2aE1DZ2dFQkFKYm12ZU44eTVFekVsREFLSE5yCjZUMXF5M0hBM2JNVjJLbEZkeVR1Nll1dW1tQmM4bHBxUG1PQjZMS2hPVFZjUStmTUJDRmI1VXkvSzg0dHZCL0gKeTd4UThHM0ZzakQxWWxYMUZMeWNuU3FvV2ZSS0g0OVRJV3BJV1ZPYXdvbEJwUjVuYVN0TzJzampHWHBFYm9XMQowVkhuYk9oVnowbmM4eC9qZWpxdVhxRmEwdlI2OGVJeVU2M1ZmUGxOb0xST2pjNUJoQ3BaTEY2cGk1TmpVRCtyCmdxWHgweDgzenlxdUUrTTNRaHZZa1hjMjZxTFRPY0pMUDJ1VTBCN0pwNHhzVFQ5YmUrdkorSkovWEFKOW9NZ0oKbWtVU2h5emcvODJxZ2R2d0cxSlZWTEZIVnI1Yjk2cFE0Z212SGVZVXcxR3FrTU9XenI2RWVkMWFMY1g4VEZvZApMY0VDZ2dFQU1kaEd2M2xycmtLZnQwRUtLOEZmVGxzR2JTY3lSdmxjd29UOUw3MXJmcXRFalE3aEdhOHpjOG51CjYxYjRmSTRyOWJJV0NWV2lDWkd2MC8rQ216Yk8xYzI2RzNLRUp2UW91UVZaektCbnlsbDZneTJPcmFqdkdvQncKTG9keXNCWFpkcHJPbjdtWWx3aVZMM2o0Z3pXUWF5Q0xwQkZBaVBKdCtJanNuMXgvOEQ1S25YbUJIOFFxdTl3bApmWUY4c0Fabi9jSHBLdkFtM2Z1blN5eUhQdWFaQWhGd2E4TWJOVkZBZkRzd09jMUJ6MHlHeUppeVZYWTVndnFqCjR6bTRvWjJlRDJWNGxmM2hZdm1XTHZrYk9wV0NHUGwyWTNlWGg0QytwMmxya3R4QTdXQ0ZyaDRremlWL000ZEcKbWZUWUkvUjk5SEJTdzlJc0FpV0JGeUhlVlBzNFdBPT0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQo=
+type: kubernetes.io/tls

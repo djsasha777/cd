@@ -3,22 +3,15 @@ pipeline {
     stages {
         stage('start') {
             steps {
-              echo 'salut monsieur!'
-            }
-        }
-        stage('start minikube daemon') {
-            steps {
-              echo 'starting minikube for local testing'
-              sh 'minikube start'
+              echo 'Salut monsieur! this is local jenkins pipe for run app'
             }
         }
         stage('run cluster') {
             steps {
                 echo 'run my app in kubernetes'
-                sh 'cd IOT'
-                sh 'git pull'
-                sh 'cd ..'
-                sh 'kubectl apply -f IOT/'
+                sh 'kubectl create ns iotnamespace'
+                sh 'kubectl apply -f mongo.yaml'
+                sh 'kubectl apply -f app.yaml'
             }
         }
     }
