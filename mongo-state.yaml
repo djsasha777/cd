@@ -101,7 +101,8 @@ spec:
               value: "mongodb"
       volumes:
       - name: mongo-persistent-storage
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: mongo-volume
 
 ---
 apiVersion: v1
@@ -122,3 +123,18 @@ metadata:
   namespace: iotnamespace
 data:
   database_url: mongodb
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-volume
+  namespace: iotnamespace
+  labels:
+    app: mongo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
