@@ -97,6 +97,13 @@ spec:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-password
+        volumeMounts:
+          - name: mongo-volume
+            mountPath: /var/mongo/data
+        volumes:
+          - name: mongo-volume
+            persistentVolumeClaim:
+              claimName: mongo-volume
 
 ---
 apiVersion: v1
@@ -122,3 +129,18 @@ type: Opaque
 data:
   mongo-root-username: ZGpzYXNoYTc3Nw==
   mongo-root-password: RmluZ2F6MzkyMg==
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-volume
+  namespace: iotnamespace
+  labels:
+    app: mongodb
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
