@@ -144,3 +144,19 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+ name: mongo-pv
+ labels:
+  type: local
+spec:
+ storageClassName: manual
+ capacity:
+  storage: 1Gi
+ accessModes:
+  - ReadWriteOnce
+ hostPath:
+  path: "/Users/alex_hackintosh/devops/"
