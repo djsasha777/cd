@@ -100,10 +100,10 @@ spec:
         volumeMounts:
           - name: mongo-volume
             mountPath: /var/mongo/data
-        volumes:
-          - name: mongo-volume
-            persistentVolumeClaim:
-              claimName: mongo-volume
+      volumes:
+        - name: mongo-volume
+          persistentVolumeClaim:
+            claimName: mongo-volume
 
 ---
 apiVersion: v1
