@@ -1,0 +1,102 @@
+---
+  apiVersion: "apps/v1"
+  kind: "StatefulSet"
+  metadata:
+     name: "mongo-st"
+     namespace: "iotnamespace"
+  spec:
+    serviceName: "mongo-st"
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "mongo-st"
+    template:
+      metadata:
+        labels:
+           app: "mongo-st"
+      spec:
+        containers:
+          -
+            name: "mongo-st"
+            image: "mongo"
+            imagePullPolicy: "Always"
+            env:
+             -
+                name: "MONGO_INITDB_ROOT_USERNAME"
+                value: "xxxx"
+
+             -
+                name: "MONGO_INITDB_ROOT_PASSWORD"
+                value: "xxxx"
+
+            ports:
+              -
+                containerPort: 27017
+                name: "mongodb"
+
+            volumeMounts:
+              -
+                name: "mongodb-persistent-storage"
+                mountPath: "/data/db"
+        volumes:
+          -
+            name: "mongodb-persistent-storage"
+            persistentVolumeClaim:
+              claimName: "mongodb-pvc-development"
+
+---
+  apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    name: "mongodb-pvc-development"
+    namespace: "iotnamespace"
+    labels:
+      app: "mongo-st"
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName: gp2
+
+---
+apiVersion: "v1"
+kind: "PersistentVolume"
+metadata:
+ name: "mongo-pv-development"
+ namespace: "iotnamespace"
+ labels:
+  type: local
+  app: "mongo-st"
+spec:
+  storageClassName: "local-storage"
+  capacity:
+     storage: 1Gi
+  accessModes:
+     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+     namespace: "development"
+     name: "mongodb-pvc-development"
+  nfs:
+     path: /mnt
+     server: xxxx
+
+---
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: "mongo-st"
+    namespace: "iotnamespace"
+    labels:
+      app: "mongo-st"
+  spec:
+    ports:
+      -
+        name: "mongodb"
+        port: 27017
+        targetPort: 27017
+    clusterIP: "None"
+    selector:
+      app: "mongo-st"

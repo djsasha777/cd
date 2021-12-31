@@ -99,7 +99,7 @@ spec:
               key: mongo-root-password
         volumeMounts:
           - name: mongo-volume
-            mountPath: /var/mongo/data
+            mountPath: /data/db
       volumes:
         - name: mongo-volume
           persistentVolumeClaim:
@@ -152,6 +152,7 @@ metadata:
  name: mongo-pv
  labels:
   type: local
+  app: mongodb
 spec:
  storageClassName: manual
  capacity:
