@@ -113,7 +113,7 @@ spec:
         - name: MONGODB_USERNAME
           value: "drage"
         - name: MONGODB_DATABASE
-          value: "inventory"
+          value: "iotdatabase"
         - name: MONGODB_REPLICA_SET_NAME
           value: "rs0"
         - name: MONGODB_PASSWORD
@@ -412,7 +412,7 @@ spec:
     interval: 30s
   namespaceSelector:
     matchNames:
-    - database
+    - putradatabase
   selector:
     matchLabels:
       app.kubernetes.io/name: mongodb

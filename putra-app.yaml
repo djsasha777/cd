@@ -31,7 +31,7 @@ spec:
               name: mongodb
               key: mongodb-password
         - name: MONGO_MONGODB_SERVER
-          value: mongodb-0.mongodb-headless.putradatabase
+          value: mongodb-0.mongodb-headless.iotdatabase
         - name: MONGO_MONGODB_DATABASE
           value: inventory
 
