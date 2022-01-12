@@ -78,7 +78,7 @@ spec:
                 matchLabels:
                   app.kubernetes.io/name: mongodb
               namespaces:
-              - database
+              - putradatabase
               topologyKey: kubernetes.io/hostname
             weight: 1
       securityContext:
@@ -289,7 +289,7 @@ spec:
                 matchLabels:
                   app.kubernetes.io/name: mongodb
               namespaces:
-              - database
+              - putradatabase
               topologyKey: kubernetes.io/hostname
             weight: 1
       securityContext:
