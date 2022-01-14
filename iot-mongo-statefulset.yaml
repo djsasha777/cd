@@ -447,7 +447,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: mongodb
-                key: mongodb-root-password
+                key: mongodb-password
           - name: ME_CONFIG_MONGODB_SERVER
             value: mongodb-0.mongodb-headless.iotdatabase
 
