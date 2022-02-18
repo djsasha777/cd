@@ -416,3 +416,19 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: mongodb
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mongovolume
+  labels:
+    type: local
+spec:
+  storageClassName:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/djsasha777"
