@@ -3,7 +3,7 @@
   kind: "StatefulSet"
   metadata:
      name: "mongo-st"
-     namespace: "iotnamespace"
+     namespace: "testmongo"
   spec:
     serviceName: "mongo-st"
     replicas: 1
@@ -23,11 +23,11 @@
             env:
              -
                 name: "MONGO_INITDB_ROOT_USERNAME"
-                value: "xxxx"
+                value: "djsasha777"
 
              -
                 name: "MONGO_INITDB_ROOT_PASSWORD"
-                value: "xxxx"
+                value: "fingaz"
 
             ports:
               -
@@ -49,7 +49,7 @@
   kind: "PersistentVolumeClaim"
   metadata:
     name: "mongodb-pvc-development"
-    namespace: "iotnamespace"
+    namespace: "testmongo"
     labels:
       app: "mongo-st"
   spec:
@@ -65,7 +65,7 @@ apiVersion: "v1"
 kind: "PersistentVolume"
 metadata:
  name: "mongo-pv-development"
- namespace: "iotnamespace"
+ namespace: "testmongo"
  labels:
   type: local
   app: "mongo-st"
@@ -77,7 +77,7 @@ spec:
      - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   claimRef:
-     namespace: "development"
+     namespace: "testmongo"
      name: "mongodb-pvc-development"
   nfs:
      path: /mnt
@@ -88,7 +88,7 @@ spec:
   kind: "Service"
   metadata:
     name: "mongo-st"
-    namespace: "iotnamespace"
+    namespace: "testmongo"
     labels:
       app: "mongo-st"
   spec:
