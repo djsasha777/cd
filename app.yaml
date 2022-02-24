@@ -27,7 +27,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mymongo-mongodb
-              key: mongo-root-password
+              key: mongodb-root-password
         - name: MONGO_MONGODB_SERVER
           value: mymongo-mongodb-0.mymongo-mongodb-headless
         - name: MONGO_MONGODB_DATABASE
