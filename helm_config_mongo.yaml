@@ -5,5 +5,8 @@ replicaCount: 3
 auth:
     rootPassword: secret-root-pwd
 auth:
+    usernames:
+    - djsasha777
+auth:
     databases: 
     - iotdatabase
