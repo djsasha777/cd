@@ -5,4 +5,5 @@ replicaCount: 3
 auth:
     rootPassword: secret-root-pwd
 auth:
-    databases: iotdatabase
+    databases: 
+    - iotdatabase
