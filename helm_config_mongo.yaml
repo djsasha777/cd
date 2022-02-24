@@ -4,9 +4,9 @@ replicaCount: 3
 #    storageClass: "linode-block-storage"
 auth:
     rootPassword: secret-root-pwd
-auth:
-    usernames:
-    - djsasha777
-auth:
-    databases: 
-    - iotdatabase
+#auth:
+#    usernames:
+#    - djsasha777
+#auth:
+#    databases: 
+#    - iotdatabase
