@@ -1,0 +1,14 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: datadir-mymongo-mongodb-0
+  labels:
+    type: local
+spec:
+  storageClassName:
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/djsasha777"
