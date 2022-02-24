@@ -2,6 +2,8 @@ architecture: replicaset
 replicaCount: 3
 volumePermissions: 
     enabled: true
+persistence:
+    size: 1Gi
 #persistence:
 #    storageClass: "linode-block-storage"
 auth:
