@@ -22,10 +22,7 @@ spec:
         - containerPort: 8088
         env:
         - name: MONGO_MONGODB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mymongo-mongodb
-              key: mongo-root-username
+          value: root
         - name: MONGO_MONGODB_PASSWORD
           valueFrom:
             secretKeyRef:
