@@ -4,8 +4,8 @@ volumePermissions:
     enabled: true
 persistence:
     size: 1Gi
-#persistence:
-#    storageClass: "linode-block-storage"
+persistence:
+    storageClass: "manual"
 auth:
     rootPassword: secret-root-pwd
 #auth:
