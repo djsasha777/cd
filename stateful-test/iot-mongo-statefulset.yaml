@@ -433,6 +433,8 @@ spec:
   hostPath:
     path: "/home/djsasha777/0"
 
+---
+
 kind: PersistentVolume
 apiVersion: v1
 metadata:
@@ -447,6 +449,8 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/home/djsasha777/1"
+
+---
 
 kind: PersistentVolume
 apiVersion: v1
