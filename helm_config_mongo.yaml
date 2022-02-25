@@ -5,7 +5,7 @@ volumePermissions:
 persistence:
     size: 1Gi
 #persistence:
-#    storageClass: "standard"
+    storageClass: "local-storage"
 auth:
     rootPassword: secret-root-pwd
 #auth:
