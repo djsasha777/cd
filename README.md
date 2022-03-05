@@ -14,7 +14,7 @@ port redirecting:
 
 kubectl port-forward --address 172.22.196.117 pod/my-iot-run-6f9b479958-6wqcz 8088:8088
 kubectl port-forward --address 172.22.100.107 service/my-monitor-grafana 8091:80
-kubectl port-forward --address 172.22.100.107 service/my-service 8088:8088
+kubectl port-forward --address 172.22.66.95 service/my-service 8088:8088
 
 
 Testing:
