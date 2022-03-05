@@ -1,448 +1,134 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: 1s
-
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: 1s-server-home
-  namespace: 1s
-  labels:
-    type: local
-    app: 1s
-spec:
-  storageClassName: local-storage
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/home/1s/server-home"
-
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: 1s-server-logs
-  namespace: 1s
-  labels:
-    type: local
-    app: 1s
-spec:
-  storageClassName: local-storage
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/home/1s/server-logs"
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: 1s-server-home
-  namespace: 1s
-  labels:
-    app: 1s
-    type: local
-spec:
-  storageClassName: local-storage
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: 1s-server-logs
-  namespace: 1s
-  labels:
-    app: 1s
-    type: local
-spec:
-  storageClassName: local-storage
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: 1s-postgres-pv
-  namespace: 1s
-  labels:
-    app: postgres
-    type: local
-spec:
-  storageClassName: 1s-microk8s-hostpath
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/home/1s/var/data"
-
----
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: 1s-microk8s-hostpath
-  namespace: 1s
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-provisioner: microk8s.io/hostpath
-
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: 1s-postgres-pv-claim
-  namespace: 1s
-  labels:
-    app: postgres
-spec:
-  storageClassName: 1s-microk8s-hostpath
-  capacity:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-configuration
-  namespace: 1s
-  labels:
-    app: postgres
-data:
-  POSTGRES_DB: postgressdb
-  POSTGRES_USER: postgressuser
-  POSTGRES_PASSWORD: postgresspassword
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-service
-  namespace: 1s
-  labels:
-    app: postgres
-spec:
-  ports:
-  - port: 5432
-    name: postgres
-  type: NodePort 
-  selector:
-    app: postgres
-
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: postgres-statefulset
-  namespace: 1s
-  labels:
-    app: postgres
-spec:
-  serviceName: "postgres"
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:12
-        envFrom:
-        - configMapRef:
-            name: postgres-configuration
-        ports:
-        - containerPort: 5432
-          name: postgresdb
-        volumeMounts:
-        - name: pv-data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: pv-data
-        persistentVolumeClaim:
-          claimName: 1s-postgres-pv-claim
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: s-deployment
-  namespace: 1s
+  name: my-iot-run
   labels:
-    name: 1s
-    app: 1s
+    name: myappiotimage
+    app: myappiotimage
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: 1s
+      app: myappiotimage
   template:
     metadata:
       labels:
-        app: 1s
+        app: myappiotimage
     spec:
       containers:
-      - name: s-server
-        image: djsasha777/1s-server:latest
+      - name: myappiotimage
+        image: djsasha777/iotimage:16
         ports:
-        - containerPort: 1540
-        - containerPort: 1541
-        - containerPort: 1545
-        - containerPort: 1560
-        - containerPort: 1561
-        - containerPort: 1562
-        - containerPort: 1563
-        - containerPort: 1564
-        - containerPort: 1565
-        - containerPort: 1566
-        - containerPort: 1567
-        - containerPort: 1568
-        - containerPort: 1569
-        - containerPort: 1570
-        - containerPort: 1571
-        - containerPort: 1572
-        - containerPort: 1573
-        - containerPort: 1574
-        - containerPort: 1575
-        - containerPort: 1576
-        - containerPort: 1577
-        - containerPort: 1578
-        - containerPort: 1579
-        - containerPort: 1580
-        - containerPort: 1581
-        - containerPort: 1582
-        - containerPort: 1583
-        - containerPort: 1584
-        - containerPort: 1585
-        - containerPort: 1586
-        - containerPort: 1587
-        - containerPort: 1588
-        - containerPort: 1589
-        - containerPort: 1590
-        - containerPort: 1591
-      
-        volumeMounts:
-          - name: 1s-server-home
-            mountPath: /home/usr1cv8
-          - name: 1s-server-logs
-            mountPath: /var/log/1C
-      volumes:
-        - name: 1s-server-home
-          persistentVolumeClaim:
-            claimName: 1s-server-home
-        - name: 1s-server-logs
-          persistentVolumeClaim:
-            claimName: 1s-server-logs
+        - containerPort: 8088
+        env:
+        - name: MONGO_MONGODB_USERNAME
+          value: root
+        - name: MONGO_MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mymongo-mongodb
+              key: mongodb-root-password
+        - name: MONGO_MONGODB_SERVER
+          value: mymongo-mongodb-0.mymongo-mongodb-headless
+        - name: MONGO_MONGODB_DATABASE
+          value: iotdatabase
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: s-service
-  namespace: 1s
+  name: my-service
   labels:
-    name: 1s
-    app: 1s
+    name: myappiotimage
+    app: myappiotimage
 spec:
-  #type: NodePort
   selector:
-    app: 1s
+    app: myappiotimage
+  type: LoadBalancer
   ports:
-    - name: port1540
-      protocol: TCP
-      port: 1540
-      targetPort: 1540
-      #nodePort: 30540
-    - name: port1541
-      protocol: TCP
-      port: 1541
-      targetPort: 1541
-      #nodePort: 30541
-    - name: port1545
-      protocol: TCP
-      port: 1545
-      targetPort: 1545
-      #nodePort: 30545
-    - name: port1560
-      protocol: TCP
-      port: 1560
-      targetPort: 1560
-      #nodePort: 30560
-    - name: port1561
-      protocol: TCP
-      port: 1561
-      targetPort: 1561
-      #nodePort: 30561
-    - name: port1562
-      protocol: TCP
-      port: 1562
-      targetPort: 1562
-      #nodePort: 30562
-    - name: port1563
-      protocol: TCP
-      port: 1563
-      targetPort: 1563
-      #nodePort: 30563
-    - name: port1564
-      protocol: TCP
-      port: 1564
-      targetPort: 1564
-      #nodePort: 30564
-    - name: port1565
-      protocol: TCP
-      port: 1565
-      targetPort: 1565
-      #nodePort: 30565
-    - name: port1566
-      protocol: TCP
-      port: 1566
-      targetPort: 1566
-      #nodePort: 30566
-    - name: port1567
-      protocol: TCP
-      port: 1567
-      targetPort: 1567
-      #nodePort: 30567
-    - name: port1568
-      protocol: TCP
-      port: 1568
-      targetPort: 1568
-      #nodePort: 30568
-    - name: port1569
-      protocol: TCP
-      port: 1569
-      targetPort: 1569
-      #nodePort: 30569
-    - name: port1570
-      protocol: TCP
-      port: 1570
-      targetPort: 1570
-      #nodePort: 30570
-    - name: port1571
-      protocol: TCP
-      port: 1571
-      targetPort: 1571
-      #nodePort: 30571
-    - name: port1572
-      protocol: TCP
-      port: 1572
-      targetPort: 1572
-      #nodePort: 30572
-    - name: port1573
-      protocol: TCP
-      port: 1573
-      targetPort: 1573
-      #nodePort: 30573
-    - name: port1574
-      protocol: TCP
-      port: 1574
-      targetPort: 1574
-      #nodePort: 30574
-    - name: port1575
-      protocol: TCP
-      port: 1575
-      targetPort: 1575
-      #nodePort: 30575
-    - name: port1576
-      protocol: TCP
-      port: 1576
-      targetPort: 1576
-      #nodePort: 30576
-    - name: port1577
-      protocol: TCP
-      port: 1577
-      targetPort: 1577
-      #nodePort: 30577
-    - name: port1578
-      protocol: TCP
-      port: 1578
-      targetPort: 1578
-      #nodePort: 30578
-    - name: port1579
-      protocol: TCP
-      port: 1579
-      targetPort: 1579
-      #nodePort: 30579
-    - name: port1580
-      protocol: TCP
-      port: 1580
-      targetPort: 1580
-      #nodePort: 30580
-    - name: port1581
-      protocol: TCP
-      port: 1581
-      targetPort: 1581
-      #nodePort: 30581
-    - name: port1582
-      protocol: TCP
-      port: 1582
-      targetPort: 1582
-      #nodePort: 30582
-    - name: port1583
-      protocol: TCP
-      port: 1583
-      targetPort: 1583
-      #nodePort: 30583
-    - name: port1584
-      protocol: TCP
-      port: 1584
-      targetPort: 1584
-      #nodePort: 30584
-    - name: port1585
-      protocol: TCP
-      port: 1585
-      targetPort: 1585
-      #nodePort: 30585
-    - name: port1586
-      protocol: TCP
-      port: 1586
-      targetPort: 1586
-      #nodePort: 30586
-    - name: port1587
-      protocol: TCP
-      port: 1587
-      targetPort: 1587
-      #nodePort: 30587
-    - name: port1588
-      protocol: TCP
-      port: 1588
-      targetPort: 1588
-      #nodePort: 30588
-    - name: port1589
-      protocol: TCP
-      port: 1589
-      targetPort: 1589
-      #nodePort: 30589
-    - name: port1590
-      protocol: TCP
-      port: 1590
-      targetPort: 1590
-      #nodePort: 30590
-    - name: port1591
-      protocol: TCP
-      port: 1591
-      targetPort: 1591
-      #nodePort: 30591
+  - name: myappserviceport
+    protocol: TCP
+    port: 8088
+    targetPort: 8088
+    nodePort: 30888
 
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  tls:
+    - hosts:
+      - djsashaiot.com
+      secretName: app-secret
+  rules:
+  - host: "djsashaiot.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/test"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addrelay/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addsensor/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZhakNDQTFJQ0NRQ0ZQeHc5NkkwbVJ6QU5CZ2txaGtpRzl3MEJBUXNGQURCM01Rc3dDUVlEVlFRR0V3SnkKZFRFTE1Ba0dBMVVFQ0F3Q2EzSXhEakFNQmdOVkJBY01CWE52WTJocE1SQXdEZ1lEVlFRS0RBZGthbk5oYzJoaApNUW93Q0FZRFZRUUxEQUZoTVFvd0NBWURWUVFEREFGaE1TRXdId1lKS29aSWh2Y05BUWtCRmhKa2FuTmhjMmhoCk56YzNRRzFoYVd3dWNuVXdIaGNOTWpFeE1qQTVNRFV6TlRJNFdoY05Nakl4TWpBNU1EVXpOVEk0V2pCM01Rc3cKQ1FZRFZRUUdFd0p5ZFRFTE1Ba0dBMVVFQ0F3Q2EzSXhEakFNQmdOVkJBY01CWE52WTJocE1SQXdEZ1lEVlFRSwpEQWRrYW5OaGMyaGhNUW93Q0FZRFZRUUxEQUZoTVFvd0NBWURWUVFEREFGaE1TRXdId1lKS29aSWh2Y05BUWtCCkZoSmthbk5oYzJoaE56YzNRRzFoYVd3dWNuVXdnZ0lpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElDRHdBd2dnSUsKQW9JQ0FRRE1BSExtR3RKTUVWRThiR3RPdm93cHI3RXhOaWc5WWUvVmluZnR1SWc3YzZMdkpzLzdMb3N1c2hJaApEVy9sZHdxK1diQUwvTlY0ekl3V1FvaVZacUVXdkZ5L3U0K3BmaUZlSlpvMmt0UXVTcUZvVHl6TUhzaUlNdmNUCnA3OGowTTJZWTBjOVBOd04vd2NUeFNtMWEwQkpTeWZOV3dTOE56Zm1rU244c1BXVXNpU2RRMWtyZEN1cmh0aloKKzVtS2R2a2lOMnBFUDZoQ0hoVGk2eVJ5c1hySlNwRkVJd1l0Q0REVGUwYndESVhOU0s1QWJGYmpaaFV1NWs3YgpaZXdOR2p3VHY4VXJSWGlrMGVSZlJGc1NuWG1RVm4xdnFpNzVpajc1ZnlBOXgzK3RqaTFrelNCRlkxNyt2UW8vCkkrQU9BYTVPODYwd0VYN1BCSWlEN3VqNUUvUEZNUHdJeUlTWi9KL1E4QjZkUmxMZFl6bHVxMTBrVTVYWC81S2sKUktseUQ2TWsyVWJSRWYrM3gxUDRZUjRSUGt4NkF0a3dhVnl1RUVzNk9oeTNLUnJLWVdudHhZZTJZbXdCMjd5YQptcURGUVExNlljZ1RBYnI1QldhVTk0V2k0Tk11M2s2L21aVXlwL0JLOWEvaDk0VFFKc2x4eDRQT0FEaE5lY2JDCkdSL0t0RFh3YkxlTm51NGx5RS9FcGpMaXlLRzl2MkdKN0IremFLTWhvTEJCM1gvb0ZLWHQzTStjdTFLYkFhbGEKS0R0a1puSHhDUFhEdExuVDRlTUxvUXpCRzM0UlpIVytnc0JyT1ZaMUdyV1ZQRHRCbXVrTE4rNU40SDFrNmV1VgoxYTBxS1E2TFNhZjV5VnFoSFRqQjd2L3ZsMHlQdDY4MDJYd01MUElFTS9JMlp5b0xLd0lEQVFBQk1BMEdDU3FHClNJYjNEUUVCQ3dVQUE0SUNBUUJWdXBDMWFXZ0l5N1JxeGRSNHlOd0UxdjVsYk1JZjRBYnUrZDYxNDdKbzQ2TlkKdTlMV0hVby9TTUtxWTc3SEt4dERQWkxoSUIxUTdKcm1tV3B4WlZEN29qMVExUjJIVlM5MTRuWTZDbUF1QkNHRApQTHZPclpiM2x2S2h0QWc4WHkwUGswd2xRU1p1bGJPZ1FocEUzK1R2anRwTjlHYmhyTWh3QW9DRWpibVJGUkdEClZUZ3JJSVpjeGNpNDNEVGtlL2w2VXJPdTFxVHFTeC9ueEdHSTdZVk9WM3pTQVpWSDRtVm9zS0tWV2ltb0VKWkIKckpoQWxtbWhndU9qUjZEREhFM1Y4ZTNFL0tJYW9zQU5nL3FjUkJaR1JUT080YVBKZWttbDkrT29WSW9hQldxWQpuM1VLWlBPell3VFRHZjhTSFphVEFuekJ0SjJoYkhzL0o1ZHZHaHhvaEJpM21MUXZKQTFkQzlGSm1BcXRsdFo2Cnk5THBQVTNrc1A4QnpIZ0gxdWNxbE1BZG9zeHhycUNOOStTQTJlZzE1UWdQTHlEOVZUV1J5Z1dLTGNrYnNNSzkKYXpDL2ZZd0V1TEdIK0RiZ0M3OGJtRjcrUU9rUFVWaWdwQ1k3QnBqQ0V0SjdkQXB0b09sckRMamtlemIrdnEzTApOYlpPNVFTV3ZoaEdWQ21MYy82YndnbmtjaDJyMkRSZ1BpYi95L0JyRkZ0dkg3TnVXR25uUmU0T1lva3E3LzJCCkFYMFBYczJTOXNJVXlweEVMaFpLNGtsTVZHMi9ZNHprWE1UUHZ1VFZDTHNDc3c0NVJid3pacUFpVlZESDNIMmkKRUxPSVNaYWZVV0R1ZVRCUUVuS2lPWTVHM3VLdjZTRW1EUE9MZE1wdU1mUi8ybWFkVUJzSGF2SVlRdm1sd1E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUpRZ0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQ1N3d2dna29BZ0VBQW9JQ0FRRE1BSExtR3RKTUVWRTgKYkd0T3Zvd3ByN0V4TmlnOVllL1ZpbmZ0dUlnN2M2THZKcy83TG9zdXNoSWhEVy9sZHdxK1diQUwvTlY0ekl3VwpRb2lWWnFFV3ZGeS91NCtwZmlGZUpabzJrdFF1U3FGb1R5ek1Ic2lJTXZjVHA3OGowTTJZWTBjOVBOd04vd2NUCnhTbTFhMEJKU3lmTld3UzhOemZta1NuOHNQV1VzaVNkUTFrcmRDdXJodGpaKzVtS2R2a2lOMnBFUDZoQ0hoVGkKNnlSeXNYckpTcEZFSXdZdENERFRlMGJ3RElYTlNLNUFiRmJqWmhVdTVrN2JaZXdOR2p3VHY4VXJSWGlrMGVSZgpSRnNTblhtUVZuMXZxaTc1aWo3NWZ5QTl4Myt0amkxa3pTQkZZMTcrdlFvL0krQU9BYTVPODYwd0VYN1BCSWlECjd1ajVFL1BGTVB3SXlJU1ovSi9ROEI2ZFJsTGRZemx1cTEwa1U1WFgvNUtrUktseUQ2TWsyVWJSRWYrM3gxUDQKWVI0UlBreDZBdGt3YVZ5dUVFczZPaHkzS1JyS1lXbnR4WWUyWW13QjI3eWFtcURGUVExNlljZ1RBYnI1QldhVQo5NFdpNE5NdTNrNi9tWlV5cC9CSzlhL2g5NFRRSnNseHg0UE9BRGhOZWNiQ0dSL0t0RFh3YkxlTm51NGx5RS9FCnBqTGl5S0c5djJHSjdCK3phS01ob0xCQjNYL29GS1h0M00rY3UxS2JBYWxhS0R0a1puSHhDUFhEdExuVDRlTUwKb1F6QkczNFJaSFcrZ3NCck9WWjFHcldWUER0Qm11a0xOKzVONEgxazZldVYxYTBxS1E2TFNhZjV5VnFoSFRqQgo3di92bDB5UHQ2ODAyWHdNTFBJRU0vSTJaeW9MS3dJREFRQUJBb0lDQURmM3Q0NGh0YWhnNStTbjZoakVkamZKCmw5ZGtnRTIyM05HOUY0SUVxbnVGRWlLQ2gzVG1KQkUva1hHMytnYitUZGhEU3VVL0RHSUQzRHNQTGVHdk1tckcKYXJ1L2ZYNkd1Q2pZTUNMZ3pZMlZ0QXFtRGloQ0djb2tFVjAzSEYxN0g2eTdNQVJBK2k1czFVZzdRMkllZHBpbApJZHBaS2tkbzd0RTI2a29GVXByazlONmdaNHBnYU1xNlNDd2x0czRpTGQrUlRIcEU3S2lYRUN2aFR6S1lOcE9hCi9aZXY5RFhPbFhhdno1cDBGUkZvNjBXSmM1MFhtS0F4VjFraDhVejI4WnlKZEZLVzBLNkhWeHc3NkxDR3U1ODUKMjFnVFhLZmhvYjFaZjBMenhMZWMxaDlkbDRqeDVsSUZFeGFYaFJUU3FUdkg1cS9WWFBEMjBXMUEwbkhqWTNFcwp3YjQrVEl2VTlUczNrY000c1N2dVhFaFVTTGh5R0pkdmtuT2VhRmZjZjBSNFdkSzBuL2RidnlWVlIzVG1IeDBCCkdQK0pBTWpZUTVGT3h2bDBPeUNRc24yTGFxVE4wQUZRQ0JtMXYvb3FQaHpxWHgycFpZUmZWRy9raWRPOXZDNTgKVUtXZUZFZURMS0NiQ2trMW1LSTdkTXVkRWc0VEFuclh4eE1FTjBNaUNMRWRiMklGUFZ3TzdoYjh3Y0JXVG9pcgo5SFpaT2ZEMHZPNEhEOVZxMlhVTTVqbFZWNGlhaFF4eXZnZmJVdnNXdTI4R2Ird00yVFpZbk9RemY5YXVabitoCjVEUm9sRWVKRWY1VWxCTWVXOW1BaEZNTDc4MndBTDI0bDg0ckxJWkpIZExlUTRRSjJacU54cGJXVWh2dUk5eXMKK3NrcURrWWRJSzgvQnlXV1JYWWhBb0lCQVFEb2I4OENRdGlsRVdnK0FaTGYyajdOb2x3RG9oeStOV3YzU0xVLwppV016VjZ0cTI4WTdNdVRLSmV1ZEZTb040M29nUkJoMDF2S0srOVVwQjRUVUZmU3hJdEFJYzYvUFFZbzB0Nmk5CmVhVzNoYTdhR2JUblI5QWd6eS9XTk04R0FUem0weFJQOUlzbThWMm5YTmZZdHZKMEo3WERadXpkS2NQUllJKzUKeHFNaldIUjhQZnZmVW0vZGw3emxtTGpLandrTnRJZ2tkd3piUmt5RGlENTIvOWpocWQ3bmVyOVBlU3RubU5McQpSa1FrSGs0TXVWUzdBY1hGbHpxYVVKRkFTSUtDTldxbGVBYUlEek1HU2hQQVJNSmhtbjZ5SENMOTcxUlluV00rClZlODZ2UkpwODUrT0l6YTZ1aHEwZzFoM1RFQWVQRElFVmI3dUV5Vk5jVFZqZERVUEFvSUJBUURncnJJcnRMWVoKM0tpa1FwYmR4OFlzT2I4MlV1a2hoV3RLSjlTeUpYNC9PNjlRUWY1R1ZOT0JjYkdVVERDRllmTXVoekF3TkNhVApiYXZFbDQ2TWlmcEJIdUJDa2trV3FDeGNjdVVGOXFoNXdEQ09acW9SK2NUOG5SbndlN1ZrUHkwaUNlaDQ3WVJmClJ6UFJSZS9kOTJMMjdtZkIyb3JXMk00eU1qZHppS2wwai92K2w0aXZLR3ZDMGw4d3V3S0dGMGJNUVo2TGtmUGEKNTVYbHFJd3BTdXluRUQ2aUswTWJ6dHVIZG40Y1FpWGZlcEVoOUJHZXNRRW9DZ1p4SHdaYy9JVWpzUTlsanoxOQpmTEFUSWZ3ZjRzc2l5T050azJJVEN5b0JsK2xPNm90d0hGWUVrMWdwWGZkb093clRLWGNPc05LVDBaUDk0Ti9uCjYvYmhvUUNZZTZBbEFvSUJBSHRyZXlENU82NFNteVpwa1lLWmtVV0JVNWgrU1FMYXZQUjJQLzkzeFJ2ckRsTlUKVldMenVEWjZnaXhMbzZQeVNOTy9OTGs5dFZZRk9IOXJ4YVVUNzNUclJrbG1uRkRSdlVBVzBWdWlyMUxPZ2pTKwo5NmJqSStsMytpK2twTlRNYlhrblZaN0srK1IydjBMeDhvN1pQYzVkazQ4cEpOYWVxYUtRd21CajBCWWhqdUMxCnpQc2MrOWRQRGZkZjY2ZHE0ZVRNR29vNlNMSmFGcUMxQkc0TmxpemxGVDRXbUdUcnN4ZDBOM0k4VTB4V1p4MHMKZjRnNC9ibllmajZZVHpneUNGSjVhS0pxSkJXMDlHUC9pNU5KTDJuQ0xrb0cxTEcvbGlyamoySDNJV3N3SUFudwpXYVdRbnl2eFMrTFQ1M0taSTJhcWtlaHBXMU54Q1JxZzVUZGs2aE1DZ2dFQkFKYm12ZU44eTVFekVsREFLSE5yCjZUMXF5M0hBM2JNVjJLbEZkeVR1Nll1dW1tQmM4bHBxUG1PQjZMS2hPVFZjUStmTUJDRmI1VXkvSzg0dHZCL0gKeTd4UThHM0ZzakQxWWxYMUZMeWNuU3FvV2ZSS0g0OVRJV3BJV1ZPYXdvbEJwUjVuYVN0TzJzampHWHBFYm9XMQowVkhuYk9oVnowbmM4eC9qZWpxdVhxRmEwdlI2OGVJeVU2M1ZmUGxOb0xST2pjNUJoQ3BaTEY2cGk1TmpVRCtyCmdxWHgweDgzenlxdUUrTTNRaHZZa1hjMjZxTFRPY0pMUDJ1VTBCN0pwNHhzVFQ5YmUrdkorSkovWEFKOW9NZ0oKbWtVU2h5emcvODJxZ2R2d0cxSlZWTEZIVnI1Yjk2cFE0Z212SGVZVXcxR3FrTU9XenI2RWVkMWFMY1g4VEZvZApMY0VDZ2dFQU1kaEd2M2xycmtLZnQwRUtLOEZmVGxzR2JTY3lSdmxjd29UOUw3MXJmcXRFalE3aEdhOHpjOG51CjYxYjRmSTRyOWJJV0NWV2lDWkd2MC8rQ216Yk8xYzI2RzNLRUp2UW91UVZaektCbnlsbDZneTJPcmFqdkdvQncKTG9keXNCWFpkcHJPbjdtWWx3aVZMM2o0Z3pXUWF5Q0xwQkZBaVBKdCtJanNuMXgvOEQ1S25YbUJIOFFxdTl3bApmWUY4c0Fabi9jSHBLdkFtM2Z1blN5eUhQdWFaQWhGd2E4TWJOVkZBZkRzd09jMUJ6MHlHeUppeVZYWTVndnFqCjR6bTRvWjJlRDJWNGxmM2hZdm1XTHZrYk9wV0NHUGwyWTNlWGg0QytwMmxya3R4QTdXQ0ZyaDRremlWL000ZEcKbWZUWUkvUjk5SEJTdzlJc0FpV0JGeUhlVlBzNFdBPT0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQo=
+type: kubernetes.io/tls
