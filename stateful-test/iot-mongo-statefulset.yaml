@@ -236,13 +236,13 @@ spec:
           defaultMode: 0755
   volumeClaimTemplates:
   - metadata:
-      name: datadir
+      name: test-mongodb
     spec:
       accessModes:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
 
 ---
 apiVersion: v1
