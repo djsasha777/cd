@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express-st
+  labels:
+    app: mongo-express-st
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express-st
+  template:
+    metadata:
+      labels:
+        app: mongo-express-st
+    spec:
+      containers:
+      - name: mongo-express-st
+        image: mongo-express
+        ports:
+          - containerPort: 8081
+        env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: root
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            value: secret-root-pwd
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: mymongo-mongodb-0.mymongo-mongodb-headless.iot.svc.cluster.local
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service-st
+spec:
+  selector:
+    app: mongo-express
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30000
+
+
