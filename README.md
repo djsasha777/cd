@@ -2,13 +2,6 @@
 
 My iot project with CI/CD integration and running in Kubernetes cluster
 
-Run:
-
-kubectl create ns iotnamespace
-
-kubectl apply -f mongo.yaml
-
-kubectl apply -f app.yaml
 
 port redirecting:
 
