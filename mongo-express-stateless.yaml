@@ -26,7 +26,7 @@ spec:
             value: root
           - name: ME_CONFIG_MONGODB_ADMINPASSWORD
             value: secret-root-pwd
-          - name: ME_CONFIG_MONGODB_SERVER
+          - name: ME_CONFIG_MONGODB_URL
             value: mongodb-service #mymongo-mongodb-0.mymongo-mongodb-headless.iot.svc.cluster.local
 
 ---
