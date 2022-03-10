@@ -17,6 +17,8 @@ spec:
       containers:
       - name: mongo-express-st
         image: mongo-express
+        command: [ "sleep" ]
+        args: [ "infinity" ]
         ports:
           - containerPort: 8081
         env:
