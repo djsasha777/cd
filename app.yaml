@@ -24,13 +24,12 @@ spec:
         - name: MONGO_MONGODB_USERNAME
           value: root
         - name: MONGO_MONGODB_PASSWORD
-          value: secret-root-pwd
-          #valueFrom:
-          #  secretKeyRef:
-          #    name: mymongo-mongodb
-          #    key: mongodb-root-password
+          valueFrom:
+            secretKeyRef:
+              name: mymongo-mongodb
+              key: mongodb-root-password
         - name: MONGO_MONGODB_SERVER
-          value: mongodb-service #mymongo-mongodb-0.mymongo-mongodb-headless
+          value: mymongo-mongodb-0.mymongo-mongodb-headless
         - name: MONGO_MONGODB_DATABASE
           value: iotdatabase
 

@@ -1,11 +1,10 @@
 architecture: replicaset
-replicaCount: 2
+replicaCount: 3
 volumePermissions: 
     enabled: true
 persistence:
-    size: 1Gi
-#persistence:
     storageClass: "local-storage"
+    size: 100Mi
 auth:
     rootPassword: secret-root-pwd
 #auth:
