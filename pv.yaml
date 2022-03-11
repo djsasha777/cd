@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/djsasha777/0/"
+    path: "/Users/alexgoncharov/mongo0" #"/home/djsasha777/0/"
 
 ---
 kind: PersistentVolume
@@ -27,7 +27,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/djsasha777/1/"
+    path: "/Users/alexgoncharov/mongo1"  #"/home/djsasha777/1/"
 
 ---
 kind: PersistentVolume
@@ -43,4 +43,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/djsasha777/2/"
+    path: "/Users/alexgoncharov/mongo2" #"/home/djsasha777/2/"
