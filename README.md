@@ -14,7 +14,7 @@ Testing:
 
 curl -X POST -H "Content-Type: application/json" \
     -d '{"device": 20597, "relay1": false, "relay2": false, "power_mode": 2, "transfer_mode": 7}' \
-    192.168.100.31:8088//addrelay/
+    172.22.196.117:8088//addrelay/
     
 curl -X PUT -H "Content-Type: application/json" \
     -d '{"power_mode": 77, "transfer_mode": 77}' \
