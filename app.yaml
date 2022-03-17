@@ -44,7 +44,7 @@ metadata:
 spec:
   selector:
     app: myappiotimage
-  type: nodePort
+  type: NodePort
   ports:
   - name: myappserviceport
     protocol: TCP
