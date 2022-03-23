@@ -7,9 +7,4 @@ persistence:
     size: 100Mi
 auth:
     rootPassword: secret-root-pwd
-#auth:
-#    usernames:
-#    - djsasha777
-#auth:
-#    databases: 
-#    - iotdatabase
+
