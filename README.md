@@ -29,6 +29,14 @@ kubectl logs mongodb-0 -c mongodb
 iptables -t nat -A PREROUTING -d 172.22.7.185 -p tcp --dport 8088 -j DNAT --to-destination 192.168.1.113:8088
 
 
+
+!!!!!!!!
+for kubernetes dashboard(https)
+iptables -t nat -A PREROUTING -d 172.22.7.185 -p tcp --dport 1100 -j DNAT --to-destination 192.168.1.111:443
+!!!!!!!!!! https://172.22.7.185:1100
+
+
+
 helm repo add metallb https://metallb.github.io/metallb
 
 helm install metallb metallb/metallb -f helm_values_metal.yaml
