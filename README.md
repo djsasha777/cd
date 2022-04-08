@@ -8,6 +8,27 @@ My iot project with CI/CD integration and running in Kubernetes cluster
 
 2. Build and Push Docker image using Jenkins
 
+# Preparations
+
+install HElm
+
+    curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+    sudo apt-get install apt-transport-https --yes
+    echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+    sudo apt-get update
+    sudo apt-get install helm
+
+install kubens
+
+    sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+    sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+    sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+
+clote git
+
+    git clone https://github.com/djsasha777/IOT.git
+    cd IOT
+
 # Project use Helm charts:
 
     helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -16,9 +37,11 @@ My iot project with CI/CD integration and running in Kubernetes cluster
 
 # Run project
 
-    kubectl create ns metellb
+    kubectl create ns metallb
 
     kubens metallb
+
+Change ip address range in helm_values_metal.yaml file
 
     helm install metallb metallb/metallb -f helm_values_metal.yaml
 
