@@ -47,6 +47,8 @@ Change ip address range in helm_values_metal.yaml file
 
     kubectl create ns iot
 
+Change pv volumes in file pv.yaml, by default project use /home/iot folder for storage data
+
     kubectl apply -f pv.yaml
 
     kubens iot
