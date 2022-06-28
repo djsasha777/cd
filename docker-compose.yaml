@@ -1,4 +1,4 @@
-# Use root/example as user/password credentials
+# local testing in docker-compose
 version: '3.1'
 
 services:
@@ -30,7 +30,7 @@ services:
       - mongo_net
 
   iot:
-    image: djsasha777/iotimage:lts
+    image: djsasha777/myiotimage:1
     container_name: iot
     ports:
       - 8088:8088

@@ -1,36 +1,79 @@
-# This is a basic workflow to help you get started with Actions
 
-name: CI
+name: myiotimage
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    permissions:
+      contents: read
+      packages: write
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+        - name: Get current time of build
+          uses: gerred/actions/current-time@master
+          id: start-time
+        - name: Checkout
+          uses: actions/checkout@v2     
+        - name: Login to github registry
+          uses: docker/login-action@v2
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+        - name: Generate build number
+          id: buildnumber
+          uses: einaregilsson/build-number@v3
+          with:
+            token: ${{secrets.github_token}} 
+        - name : build docker image and push
+          uses: docker/build-push-action@v3
+          with:
+            context: .
+            file: ./Dockerfile
+            push: true
+            tags: |
+              ghcr.io/${{ github.repository }}/${{ github.workflow }}:${{ steps.buildnumber.outputs.build_number }}             
+        - name: Login to DockerHub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        - name: Build and push to Dockerhub
+          uses: docker/build-push-action@v3
+          with:
+            context: .
+            push: true
+            tags: djsasha777/${{ github.workflow }}:${{ steps.buildnumber.outputs.build_number }}
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+        - name: Send notification
+          uses: dawidd6/action-send-mail@v2
+          with:
+            server_address: smtp.gmail.com
+            server_port: 465
+            username: ${{ secrets.EMAIL_USERNAME }}
+            password: ${{ secrets.EMAIL_PASSWORD }}
+            subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+            body: ${{ github.job }} job in workflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+            to: ${{ secrets.EMAILOFUSER }}
+            from: ${{ secrets.EMAIL_USERNAME }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+  proviseandrun:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+        - name: install packages to ec2
+          uses: tomasnorre/ansible-cli-action@0.0.5
+          with:
+            command: "ansible-playbook run_provisioning.yml"
+        - name: run app in docker-compose in ec2
+          uses: tomasnorre/ansible-cli-action@0.0.5
+          with:
+            command: "run_docker_compose_file.yml"

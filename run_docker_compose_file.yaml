@@ -5,15 +5,15 @@
   tasks:
     - name: git pull project
       git:
-        repo: 'https://github.com/djsasha777/AWS-DEVOPS.git'
-        dest: /home/ubuntu/AWS-DEVOPS
+        repo: 'https://github.com/djsasha777/IOT.git'
+        dest: /home/IOT/
         clone: yes
         update: yes
     - name: Tear down existing services
       community.docker.docker_compose:
-        project_src: /home/ubuntu/AWS-DEVOPS/
+        project_src: /home/IOT/
         state: absent
     - name: Create and start services
       community.docker.docker_compose:
-        project_src: /home/ubuntu/AWS-DEVOPS/
+        project_src: /home/IOT/
       register: output
