@@ -62,7 +62,6 @@ jobs:
             body: ${{ github.job }} job in workflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
             to: ${{ secrets.EMAILOFUSER }}
             from: ${{ secrets.EMAIL_USERNAME }}
-            # commit test up2
   proviseandrun:
     runs-on: ubuntu-latest
     permissions:
@@ -71,10 +70,9 @@ jobs:
     needs: [build]
     steps:
         - name: Install packages to ec2
-          uses: tomasnorre/ansible-cli-action@0.0.5
+          uses: saubermacherag/ansible-playbook-docker-action@v1.4
           with:
-            command: "ansible-playbook run_provisioning.yml"
-        - name: run app in docker-compose in ec2
-          uses: tomasnorre/ansible-cli-action@0.0.5
-          with:
-            command: "run_docker_compose_file.yml"
+            playbookName: 'run_provisioning.yml'
+            inventoryFile: 'hosts'
+            keyFile: "test.pem"
+     

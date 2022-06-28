@@ -5,15 +5,15 @@
   tasks:
     - name: git pull project
       git:
-        repo: 'https://github.com/djsasha777/IOT.git'
-        dest: /home/IOT/
+        repo: 'https://github.com/djsasha777/iot.git'
+        dest: /home/iot/
         clone: yes
         update: yes
     - name: Tear down existing services
       community.docker.docker_compose:
-        project_src: /home/IOT/
+        project_src: /home/iot/
         state: absent
     - name: Create and start services
       community.docker.docker_compose:
-        project_src: /home/IOT/
+        project_src: /home/iot/
       register: output
