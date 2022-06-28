@@ -1,0 +1,19 @@
+---
+- name: Start docker container
+  hosts: MASHINES-EC2
+  become: true
+  tasks:
+    - name: git pull project
+      git:
+        repo: 'https://github.com/djsasha777/AWS-DEVOPS.git'
+        dest: /home/ubuntu/AWS-DEVOPS
+        clone: yes
+        update: yes
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: /home/ubuntu/AWS-DEVOPS/
+        state: absent
+    - name: Create and start services
+      community.docker.docker_compose:
+        project_src: /home/ubuntu/AWS-DEVOPS/
+      register: output
