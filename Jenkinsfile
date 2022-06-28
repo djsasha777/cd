@@ -27,6 +27,16 @@ pipeline {
                         }
             }
         }
+        stage('run ec2 provisioning') {
+            steps {
+              echo 'run ec2 configure for app running'
+              sh 'ansible-playbook run_provisioning.yaml'
 
+            }
+        }
+        stage('run docker compose file'){
+            steps {
+                echo 'start docker compose file on aws server'
+                sh 'ansible-playbook run_docker_compose_file.yaml'
     }
 }
