@@ -68,6 +68,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+    needs: [test]
     steps:
         - name: install packages to ec2
           uses: tomasnorre/ansible-cli-action@0.0.5
