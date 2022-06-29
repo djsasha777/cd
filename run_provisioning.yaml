@@ -1,6 +1,6 @@
 ---
 - name: Apt provisioning
-  hosts: MASHINES-EC2
+  hosts: nodes
   become: true
   tasks:
     - name: apt update

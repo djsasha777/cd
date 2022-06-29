@@ -1,6 +1,6 @@
 ---
 - name: Start docker container
-  hosts: MASHINES-EC2
+  hosts: nodes
   become: true
   tasks:
     - name: git pull project

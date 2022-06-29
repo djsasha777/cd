@@ -1,3 +1,2 @@
-
-[MASHINES-EC2]
-UBUNTU-AWS1 ansible_host=18.222.169.148
+[nodes]
+ec2-node ansible_host=18.222.169.148
