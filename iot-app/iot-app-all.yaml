@@ -60,10 +60,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - djsashaiot.com
+      - jadu.ga
       secretName: app-secret
   rules:
-  - host: "djsashaiot.com"
+  - host: "jadu.ga"
     http:
       paths:
       - pathType: Prefix
