@@ -60,10 +60,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - jadu.ga
+      - lampovi.tk
       secretName: app-secret
   rules:
-  - host: "jadu.ga"
+  - host: "lampovi.tk"
     http:
       paths:
       - pathType: Prefix
