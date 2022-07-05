@@ -73,7 +73,7 @@ MongoExpress(http)-------> https://172.22.7.185:8081
 
     curl -X POST -H "Content-Type: application/json" \
         -d '{"device": 20597, "relay1": false, "relay2": false, "power_mode": 2, "transfer_mode": 7}' \
-        172.22.7.185:8088//addrelay/
+        77.223.98.80:8088//addrelay/
     
     curl -X PUT -H "Content-Type: application/json" \
         -d '{"power_mode": 77, "transfer_mode": 77}' \
