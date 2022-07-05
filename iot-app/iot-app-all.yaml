@@ -29,7 +29,7 @@ spec:
               name: mongodb
               key: mongodb-root-password
         - name: MONGO_MONGODB_SERVER
-          value: mymongo-mongodb-0.mymongo-mongodb-headless
+          value: mongodb-0.mymongo-mongodb-headless
         - name: MONGO_MONGODB_DATABASE
           value: iotdatabase
 
