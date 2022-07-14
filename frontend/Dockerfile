@@ -1,6 +1,6 @@
 FROM nginx:1.23.0-alpine
 
 COPY /angular/dist/angular-starter /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY frontend/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 8013
