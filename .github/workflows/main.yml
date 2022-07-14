@@ -63,7 +63,7 @@ jobs:
             from: ${{ env.GIT_COMMIT_AUTHOR }}
   backdeploy:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [backbuild]
     steps:
     - uses: actions/checkout@master
     - name: deploy to cluster
