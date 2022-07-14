@@ -7,5 +7,5 @@ WORKDIR /IOTimage
 ADD main.py /IOTimage
 ADD requirements.txt /IOTimage/
 EXPOSE 8088
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r backend/requirements.txt
 CMD ["python", "/IOTimage/main.py"]
