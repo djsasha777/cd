@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+
+  angular-starter:
+    image: ghcr.io/djsasha777/angular-react-starter/testtaskangular:6
+    container_name: angular
+    ports:
+      - 80:8013
+    networks:
+      - angular_net
+
+networks:
+  angular_net:
+    driver: bridge
