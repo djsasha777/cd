@@ -4,7 +4,7 @@ ENV MONGO_MONGODB_USERNAME \
     MONGO_MONGODB_SERVER \
     MONGO_MONGODB_DATABASE
 WORKDIR /IOTimage
-ADD main.py /IOTimage
+ADD backend/main.py /IOTimage
 ADD backend/requirements.txt /IOTimage/
 EXPOSE 8088
 RUN pip install --no-cache-dir -r backend/requirements.txt
