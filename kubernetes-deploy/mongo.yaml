@@ -32,7 +32,7 @@ spec:
       name: mongo-volume
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "local-storage"
+      storageClassName: "1s-microk8s-hostpath"
       resources:
         requests:
           storage: 100Mi 
