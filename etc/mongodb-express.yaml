@@ -34,8 +34,8 @@ spec:
         - name: ME_CONFIG_MONGODB_ADMINPASSWORD
           valueFrom: 
             secretKeyRef:
-              name: mongosecret
-              key: mongoRootPassword
+              name: mongodb
+              key: mongodb-root-password
 ---
 apiVersion: v1
 kind: Service
