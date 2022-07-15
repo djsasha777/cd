@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-depl
+  labels:
+    name: angular
+    app: angular
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: angular
+  template:
+    metadata:
+      labels:
+        app: angular
+    spec:
+      containers:
+      - name: angularimage
+        image: ghcr.io/djsasha777/angular-react-starter/testtaskangular:5
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "300Mi"
+            cpu: "300m"        
+        ports:
+        - containerPort: 8013

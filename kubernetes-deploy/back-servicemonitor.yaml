@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: my-iot-service-monitor
+  labels:
+    release: stable
+    app: myappiotimage
+spec:
+  endpoints:
+    - path: /metrics
+      port: myappserviceport
+      targetPort: 8088
+  # namespaceSelector:
+  #   matchNames:
+  #   - iot
+  selector:
+    matchLabels:
+      app: myappiotimage

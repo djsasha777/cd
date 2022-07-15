@@ -41,7 +41,7 @@ class Relays(db.Document):
     power_mode = db.IntField()
     transfer_mode = db.IntField()
 
-@app.route('/')
+@app.route('/db')
 def test_page():
     startpage = Relays.objects()
     return  jsonify(startpage), 200

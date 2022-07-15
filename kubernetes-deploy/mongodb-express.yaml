@@ -17,6 +17,13 @@ spec:
       containers:
       - name: mongo-express
         image: mongo-express
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
         ports: 
         - containerPort: 8081
         env:

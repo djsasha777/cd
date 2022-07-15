@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-iot-run
+  labels:
+    name: myappiotimage
+    app: myappiotimage
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myappiotimage
+  template:
+    metadata:
+      labels:
+        app: myappiotimage
+    spec:
+      containers:
+      - name: myappiotimage
+        image: djsasha777/iotimage:16
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8088
+        env:
+        - name: MONGO_MONGODB_USERNAME
+          value: root
+        - name: MONGO_MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb
+              key: mongodb-root-password
+        - name: MONGO_MONGODB_SERVER
+          value: mongodb-0.mongodb-headless
+        - name: MONGO_MONGODB_DATABASE
+          value: iotdatabase
+
+
+
+
+
