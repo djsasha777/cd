@@ -30,7 +30,7 @@ spec:
         - name: ME_CONFIG_MONGODB_ADMINUSERNAME
           value: root
         - name: ME_CONFIG_MONGODB_SERVER
-          value: mongodb-0.mongodb-headless
+          value: mongo-0
         - name: ME_CONFIG_MONGODB_ADMINPASSWORD
           valueFrom: 
             secretKeyRef:
