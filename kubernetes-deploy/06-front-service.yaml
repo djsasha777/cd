@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     app: angular
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: angularserviceport
     protocol: TCP
