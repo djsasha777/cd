@@ -9,10 +9,10 @@ metadata:
 spec:
   selector:
     app: angular
-  type: ClusterIP
+  type: NodePort
   ports:
   - name: angularserviceport
     protocol: TCP
     port: 80
     targetPort: 8013
-    #nodePort: 30508
+    nodePort: 30508

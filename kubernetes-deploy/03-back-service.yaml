@@ -9,10 +9,10 @@ metadata:
 spec:
   selector:
     app: myappiotimage
-  type: ClusterIP
+  type: NodePort
   ports:
   - name: myappserviceport
     protocol: TCP
     port: 8088
     targetPort: 8088
-    #nodePort: 30888
+    nodePort: 30888
