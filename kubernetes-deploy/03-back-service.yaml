@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     app: myappiotimage
-  type: NodePort
+  type: ClusterIP
   ports:
   - name: myappserviceport
     protocol: TCP
