@@ -73,8 +73,10 @@ MongoExpress(http)-------> https://172.22.7.185:8081
 
     curl -X POST -H "Content-Type: application/json" \
         -d '{"device": 21592, "relay1": false, "relay2": false, "power_mode": 4, "transfer_mode": 3}' \
-        77.223.98.80:8088//addrelay/
+        77.223.98.80:8088/addrelay/
     
     curl -X PUT -H "Content-Type: application/json" \
         -d '{"power_mode": 77, "transfer_mode": 77}' \
         172.22.196.117:8088/setrelay/10025
+
+    curl -X POST -H "Content-Type: application/json" -d '{"device": 21592, "relay1": false, "relay2": false, "power_mode": 4, "transfer_mode": 3}' https://jadu.ga/addrelay/
