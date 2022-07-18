@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     app: myappiotimage
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - name: myappserviceport
     protocol: TCP
