@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: myappiotimage
-        image: djsasha777/iotimage:16
+        image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
         resources:
           limits:
             memory: "1Gi"

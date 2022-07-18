@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: angularimage
-        image: ghcr.io/djsasha777/angular-react-starter/testtaskangular:170f264
+        image: ghcr.io/djsasha777/iot/iot/iotfrontend:0741895
         resources:
           limits:
             memory: "1Gi"
