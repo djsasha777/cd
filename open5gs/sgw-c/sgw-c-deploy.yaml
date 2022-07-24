@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: open5gs-sgwc-svc-pool
+  namespace: open5gs
+  labels:
+    epc-mode: sgw-c
+spec: 
+  clusterIP: None 
+  selector:
+    epc-mode: sgw-c      
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: open5gs-sgw-c
+  namespace: open5gs
+  labels:
+    epc-mode: sgw-c
+spec:
+  replicas: 1
+  serviceName: "open5gs-sgwc-svc-pool"
+  selector:
+    matchLabels:
+      epc-mode: sgw-c
+  template:
+    metadata:
+      labels:
+        epc-mode: sgw-c
+    spec:
+      containers:
+        - name: sgwc
+          image: registry.gitlab.com/infinitydon/registry/open5gs-aio:v2.1.7
+          imagePullPolicy: IfNotPresent
+          command: ["open5gs-sgwcd", "-c", "/open5gs/config-map/sgwc.yaml"]
+          volumeMounts:
+            - name: open5gs-sgwc-config
+              mountPath: /open5gs/config-map/sgwc.yaml
+              subPath: "sgwc.yaml"
+      volumes:
+        - name: open5gs-sgwc-config
+          configMap:
+            name: open5gs-sgwc-config
