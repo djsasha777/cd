@@ -56,8 +56,8 @@ spec:
           name: mysql
           resources:
             limits:
-              memory: "1Gi"
-              cpu: "1000m"
+              memory: "300Mi"
+              cpu: "500m"
           requests:
             memory: "200Mi"
             cpu: "200m"
