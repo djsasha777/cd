@@ -5,7 +5,7 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: manual
+  storageClassName: local-storage
   capacity:
     storage: 5Gi
   accessModes:
@@ -19,7 +19,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
 spec:
-  storageClassName: manual
+  storageClassName: local-storage
   accessModes:
     - ReadWriteOnce
   resources:
@@ -54,6 +54,13 @@ spec:
       containers:
         - image: mysql:8.0
           name: mysql
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -84,7 +91,7 @@ spec:
   clusterIP: None
 
 ---
-apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wordpress
