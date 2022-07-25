@@ -56,11 +56,11 @@ spec:
           name: mysql
           resources:
             limits:
-              memory: "300Mi"
+              memory: "512Mi"
               cpu: "500m"
-          requests:
-            memory: "200Mi"
-            cpu: "200m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
