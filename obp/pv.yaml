@@ -1,0 +1,64 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: zk-pv
+  labels:
+    type: local
+    app: zk
+spec:
+  storageClassName: local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/zk/pv"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zk-pv-claim
+  labels:
+    app: zk
+    type: local
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: obp-pv
+  labels:
+    type: local
+    app: obp
+spec:
+  storageClassName: local-storage
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/obp/pv"
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata: 
+    name: obp-postgres-volume-claim
+    labels:
+      app: obp
+      type: local
+spec:
+    accessModes:
+        - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+        requests:
+            storage: 5Gi

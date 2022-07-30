@@ -176,8 +176,8 @@ Networks
 6. Представления (presentation)	Представление и шифрование данных	- ASCII, EBCDIC, JPEG, MIDI
 5. Сеансовый (session)	Управление сеансом связи	- RPC, PAP, L2TP, gRPC
 4. Транспортный (transport)	Сегменты -Прямая связь между конечными пунктами и надёжность -	TCP, UDP, SCTP
-3. Сетевой (network) - Определение маршрута и логическая адресация	IPv4, IPv6, IPsec, AppleTalk, ICMP, BGP, OSPF
-2. Канальный (data link) - PPP, IEEE 802.22, Ethernet, DSL, ARP, MAC, VLAN
+3. Сетевой (network) - Определение маршрута и логическая адресация	IPv4, IPv6, IPsec, ICMP, BGP, OSPF
+2. Канальный (data link) - PPP, IEEE 802.22, Ethernet, ARP, MAC, VLAN
 1. Физический (physical) - wireless, optic, wired
 
 29. Для чего нужны network masks?
