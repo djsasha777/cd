@@ -1,5 +1,5 @@
-kind: PersistentVolume
 apiVersion: v1
+kind: PersistentVolume
 metadata:
   name: zk-pv
   labels:
@@ -31,8 +31,8 @@ spec:
       storage: 1Gi
 
 ---
-kind: PersistentVolume
 apiVersion: v1
+kind: PersistentVolume
 metadata:
   name: obp-pv
   labels:
@@ -48,8 +48,8 @@ spec:
     path: "/home/obp/pv"
 
 ---
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata: 
     name: obp-postgres-volume-claim
     labels:
