@@ -30,6 +30,9 @@ kind: StatefulSet
 metadata:
   name: kafka
 spec:
+  selector:
+    matchLabels:
+      app: kafka
   serviceName: kafka-svc
   replicas: 1
   template:

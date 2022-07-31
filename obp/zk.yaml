@@ -34,6 +34,9 @@ kind: StatefulSet
 metadata:
   name: zk
 spec:
+  selector:
+    matchLabels:
+      app: zk
   serviceName: zk-svc
   replicas: 1
   template:
