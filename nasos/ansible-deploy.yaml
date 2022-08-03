@@ -1,0 +1,27 @@
+---
+- name: Start docker container
+  hosts: nodes
+  become: true
+  tasks:
+    - name: git pull project
+      git:
+        repo: 'https://github.com/djsasha777/deploy.git'
+        dest: /nasos
+        clone: yes
+        update: yes
+    - name: Tear down backend services
+      community.docker.docker_compose:
+        project_src: /nasos/deploy/nasos
+        state: absent
+    - name: Create and start backend services
+      community.docker.docker_compose:
+        project_src: /nasos/deploy/nasos
+      register: output
+    - name: Tear down frontend services
+      community.docker.docker_compose:
+        project_src: /nasos/deploy/nasos
+        state: absent
+    - name: Create and start frontend services
+      community.docker.docker_compose:
+        project_src: /nasos/deploy/nasos
+      register: output

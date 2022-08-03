@@ -1,0 +1,51 @@
+# local testing in docker-compose
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    container_name: nasos-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=${{secrets.MONGODB_DB}}
+      - MONGO_INITDB_ROOT_USERNAME=${{secrets.MONGODB_LOGIN}}
+      - MONGO_INITDB_ROOT_PASSWORD=${{secrets.MONGODB_PASSWORD}}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo_net
+
+  mongo-express:
+    image: nasos-mongo-express
+    restart: always
+    ports:
+      - 8080:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${{secrets.MONGODB_LOGIN}}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${{secrets.MONGODB_PASSWORD}}
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    networks:
+      - mongo_net
+
+  iot:
+    image: ghcr.io/djsasha777/deploy/nasos:${secrets.LAST_IMAGE_TAG}
+    container_name: nasos
+    ports:
+      - 8444:8444
+    environment:
+      - MONGODB_USERNAME=${{secrets.MONGODB_LOGIN}}
+      - MONGODB_PASSWORD=${{secrets.MONGODB_PASSWORD}}
+      - MONGODB_SERVER=mongo
+      - MONGODB_DATABASE=${{secrets.MONGODB_DB}}
+    networks:
+      - mongo_net
+
+networks:
+  mongo_net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
