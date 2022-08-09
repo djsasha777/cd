@@ -1,6 +1,6 @@
 ---
 - name: Apt provisioning
-  hosts: nodes
+  hosts: node
   become: true
   tasks:
     - name: apt update

@@ -46,7 +46,7 @@ def  get_sensors(id: str):
     return  jsonify(sensors), 200
 
 @app.route('/setsensor/<id>', methods=['PUT'])
-def update_sensors(id):
+def update_sensors(id: str):
     body = request.get_json()
     sensors = Sensor.objects.get_or_404(device=id)
     sensors.update(**body)
