@@ -41,7 +41,7 @@ jobs:
         - name: change latest image tags
           uses: dacbd/gha-secrets@v1
           with:
-            token: ${{ secrets.TOKEN }}
+            token: ${{ secrets.GITHUB_TOKEN }}
             name: LAST_IMAGE_TAG
             value: ${{ steps.short-sha.outputs.sha }}
         - name: Send notification
