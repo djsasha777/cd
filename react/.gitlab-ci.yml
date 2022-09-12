@@ -1,0 +1,49 @@
+stages:          
+  - build
+  - builddocker
+  - test
+  - deploy
+
+build-job:       
+  tags:
+    - local
+  image: node:18-alpine
+  stage: build
+  script:
+    - npm install
+    - npm run build
+    - echo "build complete."
+  artifacts:
+    paths:
+      - build
+
+builddocker-job:
+  tags: 
+    - shell
+  stage: builddocker
+  before_script:
+    - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker image tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"
+    - docker push "$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"
+
+localtest-job:
+  tags:
+    - shell
+  stage: test
+  script:
+    - echo "Testing App lockaly in docker"
+    - docker run --name myreaktapp -p 8018:8018 -d "$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"
+    - wget http://localhost:8018
+    - cat index.html
+    - rm index.html
+    - docker stop myreaktapp
+    - docker rm myreaktapp
+
+deploy-job: 
+  tags:
+    - shell
+  stage: deploy  
+  script:
+    - echo "Application successfully deployed.!!!"

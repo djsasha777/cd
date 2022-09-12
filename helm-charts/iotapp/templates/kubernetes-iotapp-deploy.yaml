@@ -1,0 +1,291 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "iotapp.fullname" . }}
+  labels:
+    {{- include "iotapp.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: app-iot
+  type: {{ .Values.service.type }}
+  ports:
+  - name: myappserviceport
+    protocol: TCP
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
+    nodePort: 30888
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-iot-run
+  labels:
+    name: app-iot
+    app: app-iot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-iot
+  template:
+    metadata:
+      labels:
+        app: app-iot
+    spec:
+      containers:
+      - name: app-iot
+        image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8088
+        env:
+        - name: MONGO_MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-user
+        - name: MONGO_MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-password
+        - name: MONGO_MONGODB_SERVER
+          value: mongodb-svc
+        - name: MONGO_MONGODB_DATABASE
+          value: iotdatabase
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: my-iot-service-monitor
+  labels:
+    release: stable
+    app: app-iot
+spec:
+  endpoints:
+    - path: /metrics
+      port: myappserviceport
+      targetPort: 8088
+  # namespaceSelector:
+  #   matchNames:
+  #   - iot
+  selector:
+    matchLabels:
+      app: app-iot
+
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: spongermanalex@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+--- 
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: spongermanalex@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  tls:
+    - hosts:
+      - jadu.ga
+      secretName: angular-tls
+  rules:
+  - host: "jadu.ga"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: my-angular-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/db"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/test"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/getrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setrelay/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/setsensor/<id>"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addrelay/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+      - pathType: Prefix
+        path: "/addsensor/"
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 8088
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-svc
+spec:
+  ports:
+  - port: 27017
+  selector:
+    app: mongodb
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - image: mongo:6.0
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
+        name: mongodb
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-user
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-password 
+        volumeMounts:
+        - name: mongodb-persistent-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongodb-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongodb-pv-claim
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mongodb-pv-volume
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/iot"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-secret
+type: Opaque
+data:
+  mongo-user: bW9uZ291c2Vy
+  mongo-password: bW9uZ29wYXNzd29yZA==

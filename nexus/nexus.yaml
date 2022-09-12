@@ -6,9 +6,9 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: local-storage
+  storageClassName: nfs
   capacity:
-    storage: 1Gi
+    storage: 32Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -22,12 +22,12 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: local-storage
+  storageClassName: nfs
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 32Gi
 
 ---
 apiVersion: apps/v1
@@ -50,7 +50,7 @@ spec:
           command: [ "/bin/sh","-c" ]
           args: [ "chown -R 200:200 /nexus-data" ]
           volumeMounts:
-            - name: nexus-data
+            - name: nexus-nfs
               mountPath: /nexus-data
       containers:
         - name: nexus
@@ -61,19 +61,19 @@ spec:
             - name: INSTALL4J_ADD_VM_PARAMS
               value: "-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m -Djava.util.prefs.userRoot=/some-other-dir"
           resources:
-            requests:
-              cpu: "1"
-              memory: "1500"
-            limits:
-              cpu: "2"
-              memory: "1700"
+            # requests:
+            #   cpu: "1"
+            #   memory: "512Mi"
+            # limits:
+            #   cpu: "2"
+            #   memory: "4096Mi"
           ports:
-            - containerPort: 8061
+            - containerPort: 8081
           volumeMounts:
-            - name: nexus-data
+            - name: nexus-nfs
               mountPath: /nexus-data
       volumes:
-        - name: nexus-data
+        - name: nexus-nfs
           persistentVolumeClaim:
             claimName: my-nexus-pvc
 
@@ -85,12 +85,12 @@ metadata:
   annotations:
       prometheus.io/scrape: 'true'
       prometheus.io/path:   /
-      prometheus.io/port:   '8061'
+      prometheus.io/port:   '8081'
 spec:
   selector: 
     app: nexus-server
   type: NodePort  
   ports:
-    - port: 8061
-      targetPort: 8061
+    - port: 8081
+      targetPort: 8081
       nodePort: 32460

@@ -17,11 +17,3 @@
       community.docker.docker_compose:
         project_src: /home/iot/backend
       register: output
-    - name: Tear down frontend services
-      community.docker.docker_compose:
-        project_src: /home/iot/frontend
-        state: absent
-    - name: Create and start frontend services
-      community.docker.docker_compose:
-        project_src: /home/iot/frontend
-      register: output
