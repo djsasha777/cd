@@ -1,14 +1,25 @@
-# Add two gitlab runners: docker and shell
+# Add two gitlab runners: 
+
+docker
+
+shell
 
 # Add Gitlab CI variables
 
 CI_EMAIL_LETSENCRIPT
+
 CI_HOSTNAME
+
 CI_REGISTRY
+
 CI_REGISTRY_IMAGE
+
 CI_REGISTRY_PASSWORD
+
 CI_REGISTRY_USER
+
 HOST_IP
+
 SSH_KEY
 
 # Getting Started with Create React App
