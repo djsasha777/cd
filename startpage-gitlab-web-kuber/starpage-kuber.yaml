@@ -1,0 +1,106 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-start-service
+  labels:
+    name: app-start
+    app: app-start
+spec:
+  selector:
+    app: app-start
+  type: NodePort
+  ports:
+  - name: mystartappserviceport
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 34888
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-start-run
+  labels:
+    name: app-start
+    app: app-start
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-start
+  template:
+    metadata:
+      labels:
+        app: app-start
+    spec:
+      containers:
+      - name: app-start
+        image: MY_IMAGE
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: spongermanalex@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+--- 
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: spongermanalex@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  tls:
+    - hosts:
+      - jadu.ga
+      secretName: start-tls
+  rules:
+  - host: "jadu.ga"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: my-start-service
+            port:
+              number: 80

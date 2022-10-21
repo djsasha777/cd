@@ -1,0 +1,70 @@
+stages:          
+  - builddocker
+  - test
+  - deploy
+  - kubernetes
+
+builddocker-job:
+  tags: 
+    - startshell
+  stage: builddocker
+  before_script:
+    - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker image tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"
+    - docker push "$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"
+
+localtest-job:
+  tags:
+    - startshell
+  stage: test
+  script:
+    - echo "Testing App lockaly in docker"
+    - docker run --name startpage -p 8030:8030 -d "$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"
+    - wget http://localhost:8030
+    - cat index.html
+    - rm index.html
+    - docker stop startpage
+    - docker rm startpage
+
+deploy-docker-compose-job: 
+  tags:
+    - startlocal
+  stage: deploy
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $HOST_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - scp clean.sh ubuntu@$HOST_IP:~
+    - ssh ubuntu@$HOST_IP "chmod +x clean.sh && ./clean.sh"
+    - ssh ubuntu@$HOST_IP "./clean.sh"    
+    - scp docker-compose.yaml ubuntu@$HOST_IP:~
+    - ssh ubuntu@$HOST_IP "sed -i 's|MY_EMAIL_LETSENCRIPT|"$CI_EMAIL_LETSENCRIPT"|g' docker-compose.yaml"
+    - ssh ubuntu@$HOST_IP "sed -i 's|MY_IMAGE|"$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"|g' docker-compose.yaml"
+    - ssh ubuntu@$HOST_IP "sed -i 's|MY_HOSTNAME|"$CI_HOSTNAME"|g' docker-compose.yaml"   
+    - ssh ubuntu@$HOST_IP "docker-compose up -d"
+
+kubernetes-job: 
+  tags:
+    - startkuber
+  stage: kubernetes
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$KUBER_SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $KUBER_HOST_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - scp startpage-kuber.yaml ubuntu@$KUBER_HOST_IP:~
+    - ssh ubuntu@$KUBER_HOST_IP "sed -i 's|MY_IMAGE|"$CI_REGISTRY_USER"/"$CI_REGISTRY_IMAGE":"$CI_COMMIT_SHORT_SHA"|g' startpage-kuber.yaml"
+    - ssh ubuntu@$KUBER_HOST_IP "kubectl apply -f startpage-kuber.yaml"
