@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    container_name: nasos-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=iotdatabase
+      - MONGO_INITDB_ROOT_USERNAME={{ env['MONGOUSER'] }}
+      - MONGO_INITDB_ROOT_PASSWORD={{ env['MONGOPASS'] }}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo_net
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8080:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME={{ env['MONGOUSER'] }}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD={{ env['MONGOPASS'] }}
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    networks:
+      - mongo_net
+
+  iot:
+    image: ghcr.io/djsasha777/nasos/nasos:{{ env['MONGOTAG'] }}
+    container_name: nasos
+    ports:
+      - 8444:8444
+    environment:
+      - MONGODB_USERNAME={{ env['MONGOUSER'] }}
+      - MONGODB_PASSWORD={{ env['MONGOPASS'] }}
+      - MONGODB_SERVER=mongo
+      - MONGODB_DATABASE=iotdatabase
+    networks:
+      - mongo_net
+
+networks:
+  mongo_net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
