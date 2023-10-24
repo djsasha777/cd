@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.application.name }}
+  name: {{ include "mychart.fullname" . }}-mysvc
   labels:
     {{ .Values.application.name }}
 spec:
