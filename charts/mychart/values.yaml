@@ -96,3 +96,24 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+application:
+  name: iot-test
+  namespace:
+    name: test-iot-app
+  image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
+  svc:
+    port: 8008
+    type: ClusterIP
+    node:
+      port: 30888
+  replicaCount: 1
+  ingress:
+    host:
+      name: "jadu.ga"
+
+istio:
+  ingress:
+    svc:
+      name: iot-istio-ingress
+      port: 4000
