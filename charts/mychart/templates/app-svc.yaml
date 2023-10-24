@@ -10,6 +10,6 @@ spec:
   ports:
   - name: {{ .Values.application.name }}
     protocol: TCP
-    port: {{ .Values.application.svc.port }}
-    targetPort: {{ .Values.application.svc.port }}
-    nodePort: {{ .Values.application.svc.node.port }}
+    port: {{ .Values.svc.port }}
+    targetPort: {{ .Values.svc.port }}
+    nodePort: {{ .Values.svc.node.port }}
