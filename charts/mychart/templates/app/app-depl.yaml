@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.application.name }}-depl
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    name: {{ .Values.application.name }}
+    app: {{ .Values.application.name }}
+spec:
+  replicas: {{ .Values.application.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.application.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.application.name }}
+    spec:
+      containers:
+      - name: {{ .Values.application.name }}
+        image: {{ .Values.application.image }}
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "200Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: {{ .Values.application.svc.port }}
+        env:
+        - name: MONGO_MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-user
+        - name: MONGO_MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-password
+        - name: MONGO_MONGODB_SERVER
+          value: mongodb-svc
+        - name: MONGO_MONGODB_DATABASE
+          value: iotdatabase
