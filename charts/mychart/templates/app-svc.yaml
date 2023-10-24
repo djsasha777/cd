@@ -7,7 +7,6 @@ metadata:
 spec:
   selector:
     app: {{ .Values.application.name }}
-  type: {{ .Values.application.svc.type }}
   ports:
   - name: {{ .Values.application.name }}
     protocol: TCP
