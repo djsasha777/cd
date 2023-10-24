@@ -103,10 +103,10 @@ application:
     name: test-iot-app
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
-    port: 8008
-    type: ClusterIP
-    node:
-      port: 30888
+    - port: 8008
+    - type: ClusterIP
+    - node:
+        port: 30888
   replicaCount: 1
   ingress:
     host:
@@ -115,5 +115,5 @@ application:
 istio:
   ingress:
     svc:
-      name: iot-istio-ingress
-      port: 4000
+      - name: iot-istio-ingress
+      - port: 4000
