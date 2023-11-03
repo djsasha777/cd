@@ -1,14 +1,14 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: console
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: console
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: console-serviceaccount
-  namespace: console
+  # namespace: console
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -21,13 +21,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: console-serviceaccount
-  namespace: console
+  # namespace: console
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: console-deployment
-  namespace: console
+  # namespace: console
   labels:
     app: console
 spec:
@@ -75,7 +75,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: console-service
-  namespace: console
+  # namespace: console
 spec:
   selector:
     app: console
@@ -84,17 +84,18 @@ spec:
       port: 9000
       targetPort: 9000
       protocol: TCP
+  type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: console-ingress
-  namespace: console  
+  # namespace: console  
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: console.127.0.0.1.nip.io
+  - host: console.my
     http:
       paths:
       - path: /
