@@ -22,3 +22,14 @@ istio:
     svc:
       name: iot-istio-ingress
       port: 4000
+
+integrations:
+  - name: epk
+    host: qwertyu.ru
+    ip: 192.168.111.11
+  - name: graphql
+    host: malo.ru
+    ip: 174.1.1.1
+  - name: holdingcard
+    host: holding.ru
+    ip: 172.1.1.2
