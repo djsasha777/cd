@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-iot-run
+  name: {{ .Values.application.name }}-depl
+  namespace: {{ .Values.application.namespace.name }}
   labels:
-    name: app-iot
-    app: app-iot
+    name: {{ .Values.application.name }}
+    app: {{ .Values.application.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.application.replicaCount }}
   selector:
     matchLabels:
-      app: app-iot
+      app: {{ .Values.application.name }}
   template:
     metadata:
       labels:
-        app: app-iot
+        app: {{ .Values.application.name }}
     spec:
       containers:
-      - name: app-iot
-        image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
+      - name: {{ .Values.application.name }}
+        image: {{ .Values.application.image }}
         resources:
           limits:
             memory: "1Gi"
@@ -26,7 +27,7 @@ spec:
             memory: "200Mi"
             cpu: "200m"
         ports:
-        - containerPort: 8088
+        - containerPort: {{ .Values.application.svc.port }}
         env:
         - name: MONGO_MONGODB_USERNAME
           valueFrom:
