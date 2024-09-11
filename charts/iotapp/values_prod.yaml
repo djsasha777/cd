@@ -5,7 +5,7 @@
 application:
   name: iot-test
   namespace:
-    name: test-iot-app
+    name: prod-iot-app
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
     port: 8008
