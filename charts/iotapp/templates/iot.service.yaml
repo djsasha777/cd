@@ -14,4 +14,3 @@ spec:
     protocol: TCP
     port: {{ .Values.application.svc.port }}
     targetPort: {{ .Values.application.svc.port }}
-    nodePort: {{ .Values.application.svc.node.port }}
