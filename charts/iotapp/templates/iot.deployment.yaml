@@ -30,15 +30,9 @@ spec:
         - containerPort: {{ .Values.application.svc.port }}
         env:
         - name: MONGO_MONGODB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mongo-secret
-              key: mongo-user
+          value: mongo-user
         - name: MONGO_MONGODB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongo-secret
-              key: mongo-password
+          value: mongo-password
         - name: MONGO_MONGODB_SERVER
           value: mongodb-svc
         - name: MONGO_MONGODB_DATABASE
