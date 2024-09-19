@@ -6,8 +6,6 @@ metadata:
   labels:
     name: {{ .Values.application.name }}
     app: {{ .Values.application.name }}
-  annotations: 
-    sidecar.istio.io/inject: "true"
 spec:
   replicas: {{ .Values.application.replicaCount }}
   selector:
@@ -17,6 +15,8 @@ spec:
     metadata:
       labels:
         app: {{ .Values.application.name }}
+      annotations: 
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
       - name: {{ .Values.application.name }}
