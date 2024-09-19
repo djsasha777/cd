@@ -10,6 +10,6 @@ spec:
   ports:
     - name: http
       port: {{ .Values.application.svc.port }}
-      targetPort: {{ .Values.application.svc.node.port }}
+      targetPort: {{ .Values.application.svc.target.port }}
       protocol: TCP
   type: {{ .Values.application.svc.type }}
