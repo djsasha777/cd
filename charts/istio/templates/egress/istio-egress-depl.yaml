@@ -83,9 +83,6 @@ spec:
         {{- if .Values.global.proxy.componentLogLevel }}
           - --proxyComponentLogLevel={{ .Values.global.proxy.componentLogLevel }}
         {{- end}}
-        {{- if .Values.global.logging.level }}
-          - --log_output_level={{ .Values.global.logging.level }}
-        {{- end}}
         {{- if .Values.global.logAsJson }}
           - --log_as_json
         {{- end }}
@@ -98,13 +95,6 @@ spec:
           - --serviceCluster
           - istio-egressgateway
           - --zipkinAddress
-        {{- if .Values.global.tracer.zipkin.address }}
-          - {{ .Values.global.tracer.zipkin.address }}
-        {{- else if .Values.global.telemetryNamespace }}
-          - zipkin.{{ .Values.global.telemetryNamespace }}:9411
-        {{- else }}
-          - zipkin:9411
-        {{- end }}
           - --proxyAdminPort
           - "15000"
           - --statusPort
@@ -182,12 +172,6 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          {{- if $gateway.sds }}
-          {{- if $gateway.sds.enabled }}
-          - name: ISTIO_META_USER_SDS
-            value: "true"
-          {{- end }}
-          {{- end }}
           {{- if $gateway.env }}
           {{- range $key, $val := $gateway.env }}
           - name: {{ $key }}
@@ -200,13 +184,6 @@ spec:
 {{ toJson $gateway.podAnnotations | indent 16}}
 {{ end }}
           volumeMounts:
-          {{ if .Values.global.sds.enabled }}
-          - name: sdsudspath
-            mountPath: /var/run/sds
-            readOnly: true
-          - name: istio-token
-            mountPath: /var/run/secrets/tokens
-          {{- end }}
           - name: istio-certs
             mountPath: /etc/certs
             readOnly: true
@@ -219,23 +196,6 @@ spec:
 {{ toYaml $gateway.additionalContainers | indent 8 }}
 {{- end }}
       volumes:
-      {{- if .Values.global.sds.enabled }}
-      - name: sdsudspath
-        hostPath:
-          path: /var/run/sds
-      - name: istio-token
-        projected:
-          sources:
-          - serviceAccountToken:
-              path: istio-token
-              expirationSeconds: 43200
-              audience: {{ .Values.global.trustDomain }}
-      {{- end }}
-      {{ if .Values.global.sds.enabled }}
-      - name: sdsudspath
-        hostPath:
-          path: /var/run/sds
-      {{- end }}
       - name: istio-certs
         secret:
           secretName: istio.default
