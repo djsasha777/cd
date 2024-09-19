@@ -8,7 +8,7 @@ application:
     name: prod-iot-app
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
-    port: 8008
+    port: 8088
     type: ClusterIP
     node:
       port: 30888
