@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 application:
-  name: iot-test
+  name: iot-prod
   namespace:
     name: prod-iot-app
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
@@ -12,10 +12,10 @@ application:
     type: ClusterIP
     node:
       port: 30888
-  replicaCount: 1
+  replicaCount: 2
   ingress:
     host:
-      name: "jadu.ga"
+      name: "prod-jadu.ga"
 
 istio:
   ingress:
