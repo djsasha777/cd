@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.application.name }}
   namespace: {{ .Values.application.namespace.name }}
   labels:
-    {{ .Values.application.name }}
+    app: {{ .Values.application.name }}
 spec:
   selector:
     app: {{ .Values.application.name }}
