@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-nssf-config
+  labels:
+    epc-mode: nssf
+data:
+  nssf.yaml: |
+    logger:
+        file: /var/log/open5gs/nssf.log   
+
+    nssf:
+      sbi:     
+      - addr: 0.0.0.0
+        advertise: {{ .Release.Name }}-nssf
+      nsi:
+      - addr: {{ .Release.Name }}-nrf
+        port: 80
+        s_nssai:
+          sst: 1        
+    nrf:
+     sbi:
+      name: {{ .Release.Name }}-nrf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-nssf
+  labels:
+    epc-mode: nssf
+spec:
+  selector:
+    epc-mode: nssf
+  ports:
+    - protocol: TCP
+      port: 80 
+      targetPort: 80  
+      
+---  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-nssf-deployment  
+  labels:
+    epc-mode: nssf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      epc-mode: nssf
+  template:
+    metadata:
+      labels:
+        epc-mode: nssf
+    spec:   
+      containers:
+        - name: nssf
+          image: "{{ .Values.open5gs.image.repository }}:{{ .Values.open5gs.image.tag }}"
+          imagePullPolicy: {{ .Values.open5gs.image.pullPolicy }}
+          command: ["open5gs-nssfd", "-c", "/open5gs/config-map/nssf.yaml"]
+          volumeMounts:
+          - name: {{ .Release.Name }}-nssf-config
+            mountPath: /open5gs/config-map/nssf.yaml
+            subPath: "nssf.yaml"          
+      volumes:
+        - name: {{ .Release.Name }}-nssf-config
+          configMap:
+            name: {{ .Release.Name }}-nssf-config           

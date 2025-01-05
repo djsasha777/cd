@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-smf-config
+  labels:
+    epc-mode: smf
+data:
+  smf.yaml: |
+    logger:
+        file: /var/log/open5gs/smf.log
+
+    parameter:
+        no_ipv6: true
+
+    smf:
+        sbi:     
+        - addr: 0.0.0.0
+          advertise: {{ .Release.Name }}-smf
+        pfcp:
+           dev: {{ .Values.k8s.interface }}
+        gtpc:
+          dev: {{ .Values.k8s.interface }}
+        gtpu:
+          dev: {{ .Values.k8s.interface }}    
+        subnet:
+         - addr: 10.45.0.1/16
+           dnn: {{ .Values.dnn }}
+        dns:
+          - 8.8.8.8
+          - 8.8.4.4
+        mtu: 1400
+
+    nrf:
+     sbi:
+      name: {{ .Release.Name }}-nrf 
+
+    upf:
+      pfcp:
+        - name: {{ .Release.Name }}-upf-svc
+          dnn: {{ .Values.dnn }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-smf
+  labels:
+    epc-mode: smf
+spec:
+  selector:
+    epc-mode: smf
+  ports:
+    - protocol: TCP
+      port: 80 
+      targetPort: 80  
+---  
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-smf-deployment
+  labels:
+    epc-mode: smf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      epc-mode: smf
+  template:
+    metadata:       
+      labels:
+        epc-mode: smf
+    spec:   
+      containers:
+      - name: smf
+        image: "{{ .Values.open5gs.image.repository }}:{{ .Values.open5gs.image.tag }}"
+        imagePullPolicy: {{ .Values.open5gs.image.pullPolicy }}
+        command: ["/bin/sh", "-c"]
+        args:
+        - open5gs-smfd -c /open5gs/config-map/smf.yaml;
+        volumeMounts:
+          - name: {{ .Release.Name }}-smf-config
+            mountPath: /open5gs/config-map/smf.yaml
+            subPath: "smf.yaml"                                       
+      volumes:
+        - name: {{ .Release.Name }}-smf-config
+          configMap:
+            name: {{ .Release.Name }}-smf-config                

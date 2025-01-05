@@ -1,0 +1,62 @@
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+spec:
+  bgpInstances:
+  - name: "mikrotik"
+    localASN: 65000
+    peers:
+    - name: "peer-65000"
+      peerASN: 65001
+      peerAddress: 192.168.111.111
+      peerConfigRef:
+        name: "cilium-peer"
+
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPPeerConfig
+metadata:
+  name: cilium-peer
+spec:
+  timers:
+    holdTimeSeconds: 9
+    keepAliveTimeSeconds: 3
+  ebgpMultihop: 4
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 15
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "bgp-mikrotik"
+
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPAdvertisement
+metadata:
+  name: bgp-advertisements
+  labels:
+    advertise: bgp-mikrotik
+spec:
+  advertisements:
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector:
+        matchLabels:
+          pool: {{ .Values.config.open5gsLbPool }}
+
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: open5gs-pool
+spec:
+  blocks:
+    - cidr: 10.0.10.0/24
+  disabled: false
