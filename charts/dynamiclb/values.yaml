@@ -1,0 +1,32 @@
+tunnel:
+  enable: true
+  connectNet: 10.10.
+  adressPool: 12.12.12.0
+  adressPoolcr: 12.12.12.
+  adressPrefix: 24
+  image: latest
+  localDev: ens18
+  remoteDev: eth0
+  remoteHost: 91.149.218.39
+
+bgp:
+  enable: false
+  adressPool: 11.11.11.0
+  adressPrefix: 24
+  localAsn: 66000
+  remoteAsn:
+    - name: as-1
+      asn: 66001
+      ip: 191.168.111.1
+
+l2:
+  enable: false
+  adressPool: 13.13.13.0
+  adressPrefix: 24
+  localDev: ens18
+
+watcher:
+  enable: true
+  image: latest
+  lbtype: tunnel
+  domain: spongo.ru
