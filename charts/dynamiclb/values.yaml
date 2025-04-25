@@ -8,6 +8,10 @@ tunnel:
   localDev: ens18
   remoteDev: eth0
   remoteHost: 91.149.218.39
+  test:
+    enable: false
+  standalone:
+    enable: false
 
 bgp:
   enable: false
@@ -26,7 +30,7 @@ l2:
   localDev: ens18
 
 watcher:
-  enable: true
+  enable: false
   image: latest
   lbtype: tunnel
   domain: spongo.ru

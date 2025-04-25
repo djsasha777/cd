@@ -66,21 +66,21 @@ spec:
     matchLabels:
       pool: bgp
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginxbgp
-  labels:
-    pool: bgp
-    lbtype: {{ .Values.watcher.lbtype }}
-spec:
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-      nodePort: 30466
-  selector:
-    app: nginx
-  type: LoadBalancer
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nginxbgp
+#   labels:
+#     pool: bgp
+#     lbtype: {{ .Values.watcher.lbtype }}
+# spec:
+#   ports:
+#     - protocol: TCP
+#       port: 80
+#       targetPort: 80
+#       nodePort: 30466
+#   selector:
+#     app: nginx
+#   type: LoadBalancer
 {{- end }}

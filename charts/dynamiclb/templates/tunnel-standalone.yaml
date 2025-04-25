@@ -1,3 +1,4 @@
+{{- if .Values.tunnel.standalone.enable }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -161,3 +162,5 @@ spec:
       - name: host
         hostPath:
           path: /tmp/install
+
+{{- end }}

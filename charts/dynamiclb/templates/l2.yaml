@@ -30,22 +30,22 @@ spec:
     matchLabels:
       pool: l2
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx
-  labels:
-    pool: l2
-    lbtype: {{ .Values.watcher.lbtype }}
-spec:
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-      nodePort: 30454
-  selector:
-    app: nginx
-  type: LoadBalancer
-  loadBalancerClass: io.cilium/l2-announcer
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nginx
+#   labels:
+#     pool: l2
+#     lbtype: {{ .Values.watcher.lbtype }}
+# spec:
+#   ports:
+#     - protocol: TCP
+#       port: 80
+#       targetPort: 80
+#       nodePort: 30454
+#   selector:
+#     app: nginx
+#   type: LoadBalancer
+#   loadBalancerClass: io.cilium/l2-announcer
 {{- end }}
