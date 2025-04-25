@@ -1,0 +1,60 @@
+server:
+  ip: 91.149.218.39
+  host: spongo.ru
+
+ansible:
+  haproxy:
+    tunnel: 
+      - name: gitea
+        ip: 12.12.12.3
+        port: 443
+        proxy: false
+      - name: vault
+        ip: 12.12.12.3
+        port: 443
+        proxy: false
+      - name: nexus
+        ip: 12.12.12.3
+        port: 443
+        proxy: false
+      - name: new
+        ip: 13.13.13.2
+        port: 443
+        proxy: false
+    other:
+      - name: www
+        ip: 192.168.49.2
+        port: 8888
+        proxy: false
+      - name: vpn
+        ip: 127.0.0.1
+        port: 9443
+        proxy: false
+      - name: nebula
+        ip: 127.0.0.1
+        port: 4242
+        proxy: false
+      - name: shadowsocks
+        ip: 127.0.0.1
+        port: 9389
+        proxy: false
+      - name: argo
+        ip: 12.12.12.1
+        port: 443
+        proxy: false
+      - name: router
+        ip: 192.168.49.2
+        port: 8808
+        proxy: false
+      - name: player
+        ip: 192.168.49.2
+        port: 8000
+        proxy: false
+      - name: switch
+        ip: 192.168.49.2
+        port: 8886
+        proxy: false
+      - name: switch2
+        ip: 192.168.49.2
+        port: 8887
+        proxy: false
