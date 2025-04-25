@@ -125,6 +125,7 @@ data:
             usage
             ;;
     esac
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -133,11 +134,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      job: tunnel
+      app: tunnel
   template:
     metadata:
       labels:
-        job: tunnel
+        app: tunnel
     spec:
       hostNetwork: true
       hostPID: true

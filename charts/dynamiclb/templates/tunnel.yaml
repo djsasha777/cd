@@ -174,23 +174,4 @@ spec:
   serviceSelector:
     matchLabels:
       pool: tunnel
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginxtun
-  labels:
-    pool: tunnel
-    lbtype: {{ .Values.watcher.lbtype }}
-spec:
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-      nodePort: 30411
-  selector:
-    app: nginx
-  type: LoadBalancer
-
 {{- end }}
