@@ -163,5 +163,17 @@ spec:
       - name: host
         hostPath:
           path: /tmp/install
-
+          
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-tun
+spec:
+  blocks:
+    - cidr: {{ .Values.tunnel.adressPool }}/{{ .Values.tunnel.adressPrefix }}
+  disabled: false
+  serviceSelector:
+    matchLabels:
+      pool: tunnel
 {{- end }}
