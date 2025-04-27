@@ -11,7 +11,7 @@ tunnel:
   test:
     enable: false
   standalone:
-    enable: false
+    enable: true
 
 bgp:
   enable: false

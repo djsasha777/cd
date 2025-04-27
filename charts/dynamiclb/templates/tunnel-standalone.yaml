@@ -133,6 +133,7 @@ kind: Deployment
 metadata:
   name: tunnel
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: tunnel
