@@ -1,0 +1,5 @@
+watcher:
+  enable: false
+  image: latest
+  lbtype: tunnel
+  domain: spongo.ru
