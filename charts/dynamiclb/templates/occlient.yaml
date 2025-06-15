@@ -19,8 +19,8 @@ spec:
       containers:
       - image: djsasha777/occlient:{{ .Values.occlient.image }}
         name: occlient
-        # securityContext:
-        #   privileged: true
+        securityContext:
+          privileged: true
         env:
         - name: VPN_SERVER
           value: {{ .Values.occlient.server }}
