@@ -15,8 +15,6 @@ spec:
         app: occlient
     spec:
       hostNetwork: true
-      hostPID: true
-      hostIPC: true
       restartPolicy: Always
       containers:
       - image: djsasha777/occlient:{{ .Values.occlient.image }}
