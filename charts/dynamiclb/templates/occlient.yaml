@@ -1,0 +1,39 @@
+{{- if .Values.occlient.standalone.enable }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: occlient
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: occlient
+  template:
+    metadata:
+      labels:
+        app: occlient
+    spec:
+      hostNetwork: true
+      hostPID: true
+      hostIPC: true
+      restartPolicy: Always
+      containers:
+      - image: djsasha777/occlient:{{ .Values.occlient.image }}
+        name: occlient
+        securityContext:
+          privileged: true
+          
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: pool-occlient
+spec:
+  blocks:
+    - cidr: {{ .Values.occlient.adressPool }}/{{ .Values.occlient.adressPrefix }}
+  disabled: false
+  serviceSelector:
+    matchLabels:
+      pool: occlient
+{{- end }}
