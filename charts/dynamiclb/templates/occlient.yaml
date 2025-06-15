@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: occlient
-    # spec:
+    spec:
     #   hostNetwork: true
       restartPolicy: Always
       containers:
