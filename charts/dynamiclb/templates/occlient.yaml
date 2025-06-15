@@ -23,7 +23,14 @@ spec:
         name: occlient
         securityContext:
           privileged: true
-          
+        env:
+        - name: VPN_SERVER
+          value: {{ .Values.occlient.server }}
+        - name: VPN_USERNAME
+          value: {{ .Values.occlient.username }}
+        - name: VPN_PASSWORD
+          value: {{ .Values.occlient.password }}
+
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool

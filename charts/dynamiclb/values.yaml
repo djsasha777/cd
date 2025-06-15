@@ -30,7 +30,10 @@ l2:
   localDev: ens18
 
 occlient:
-  enable: false
+  enable: true
   adressPool: 15.15.15.0
   adressPrefix: 24
   image: latest
+  server: vpn.spongo.ru
+  username: openconnect
+  password: mypassword
