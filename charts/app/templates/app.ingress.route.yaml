@@ -9,8 +9,11 @@ metadata:
     nginx.ingress.kubernetes.io/service-upstream: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 {{- end }}
+    kubernetes.io/ingress.class: nginx
+{{ if $routes.letsencript }}
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+{{- end }}
 spec:
-  ingressClassName: {{ $routes.className }}
   rules:
   - host: {{ $routes.url }}
     http:
