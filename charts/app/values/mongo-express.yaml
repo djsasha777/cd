@@ -28,9 +28,3 @@ integrations:
     host: qwertyu.ru
     meshPort: 6666
     type: http
-    
-istio:
-  ingress:
-    svc:
-      name: iot-istio-ingress
-      port: 4000
