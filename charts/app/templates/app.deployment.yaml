@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.application.name }}
-  namespace: {{ .Values.application.namespace.name }}
   labels:
     name: {{ .Values.application.name }}
     app: {{ .Values.application.name }}
