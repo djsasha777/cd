@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,27 +16,27 @@ spec:
     metadata:
       labels:
         app: {{ .Values.application.name }}
-      annotations: 
+      annotations:
+{{ if .Values.application.istioInject }}
         sidecar.istio.io/inject: "true"
+{{- end }}
     spec:
       containers:
       - name: {{ .Values.application.name }}
         image: {{ .Values.application.image }}
         resources:
           limits:
-            memory: "1Gi"
-            cpu: "1000m"
+            memory: {{ .Values.application.memoryLimit | default "1Gi" }}
+            cpu: {{ .Values.application.cpuLimit | default "1000m" }}
           requests:
-            memory: "200Mi"
-            cpu: "200m"
+            memory: {{ .Values.application.memoryRequest | default "200Mi" }}
+            cpu: {{ .Values.application.cpuRequest | default "200m" }}
         ports:
-        - containerPort: {{ .Values.application.svc.port }}
+{{- range $ports := .Values.application.svc }}
+        - containerPort: {{ $ports.port }}
+{{- end }}
         env:
-        - name: MONGO_MONGODB_USERNAME
-          value: mongo-user
-        - name: MONGO_MONGODB_PASSWORD
-          value: mongo-password
-        - name: MONGO_MONGODB_SERVER
-          value: mongodb-svc
-        - name: MONGO_MONGODB_DATABASE
-          value: iotdatabase
+{{- range $envs := .Values.application.env }}
+        - name: {{ $envs.name }}
+          value: {{ $envs.value }}
+{{- end }}

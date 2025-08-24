@@ -1,0 +1,25 @@
+{{- range $routes := .Values.application.ingressRoutes }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $routes.name }}-ingress-istio
+  annotations:
+{{ if eq $routes.type "istio" }}
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+{{- end }}
+spec:
+  ingressClassName: {{ $routes.className }}
+  rules:
+  - host: {{ $routes.url }}
+    http:
+      paths:
+      - pathType: Prefix
+        path: "{{ $routes.path }}"
+        backend:
+          service:
+            name: {{ $routes.service }}
+            port:
+              number: {{ $routes.port }}
+{{- end }}

@@ -4,19 +4,33 @@
 
 application:
   name: iot-test
-  namespace:
-    name: dev-iot-app
+  istioInject: false
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
-    port: 8088
-    type: ClusterIP
-    node:
-      port: 30888
+    - name: qw
+      port: 8088
+    - name: monitoring
+      port: 9090
   replicaCount: 1
-  ingress:
-    host:
-      name: "jadu.ga"
-
+  ingressRoutes:
+    - name: jadu
+      url: jadu.ga
+      type: istio
+      path: /
+      service: iot
+      port: 8080
+      className: nginx
+    - name: mona
+      url: mona.ru
+      type: strict
+      path: /mona
+      service:
+      port: 9090
+      className: nginx
+  env:
+    - name: mongo
+      value: pass
+      
 configMap:
   - kakayatoperemennaya: dataone
   - vciakaya_fignia.yyy: mydata12345
