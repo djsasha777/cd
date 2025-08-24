@@ -7,30 +7,28 @@ application:
   istioInject: false
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
-    - name: qw
+    - name: main
       port: 8088
     - name: monitoring
       port: 9090
   replicaCount: 1
   ingressRoutes:
-    - name: jadu
-      url: jadu.ga
+    - name: spongo
+      url: iot.spongo.ru
       type: istio
       path: /
-      service: iot
-      port: 8080
-      className: nginx
-    - name: mona
-      url: mona.ru
-      type: strict
-      path: /mona
-      service:
-      port: 9090
+      service: iot-test-svc
+      port: 8088
       className: nginx
   env:
-    - name: mongo
-      value: pass
-      
+    - name: MONGO_MONGODB_USERNAME
+      value: mongoiot
+    - name: MONGO_MONGODB_PASSWORD
+      value: mongopass
+    - name: MONGO_MONGODB_SERVER
+      value: mongodb-svc
+    - name: MONGO_MONGODB_DATABASE
+      value: mongoiot      
 configMap:
   - kakayatoperemennaya: dataone
   - vciakaya_fignia.yyy: mydata12345
