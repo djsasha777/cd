@@ -39,3 +39,10 @@ spec:
         - name: {{ $envs.name }}
           value: {{ $envs.value }}
 {{- end }}
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.application.name }}-app-cm
+{{ if .Values.application.istioInject }}
+          - configMapRef:
+              name: {{ .Values.application.name }}-integration-cm
+{{- end }}
