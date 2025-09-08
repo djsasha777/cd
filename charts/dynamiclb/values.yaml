@@ -37,3 +37,9 @@ occlient:
   server: vpn.spongo.ru
   username: openconnect
   password: mypassword
+
+watcher:
+  enable: false
+  image: latest
+  lbtype: tunnel
+  domain: spongo.ru

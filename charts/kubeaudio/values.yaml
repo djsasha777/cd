@@ -1,4 +1,0 @@
-kubeaudio:
-  enable: true
-  image: latest
-  nodename: node1
