@@ -1,4 +1,4 @@
-{{- if .Values.tunnel.test.enable }}
+{{- if .Values.test.enable }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginxtun
+  name: nginx
   labels:
-    pool: tunnel
-    lbtype: {{ .Values.watcher.lbtype }}
+    pool: {{ .Values.test.pool }}
+    external: {{ .Values.test.external }}
 spec:
   ports:
     - protocol: TCP
@@ -45,5 +45,4 @@ spec:
   selector:
     app: nginx
   type: LoadBalancer
-
 {{- end }}

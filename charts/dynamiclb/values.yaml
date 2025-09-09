@@ -1,5 +1,5 @@
 tunnel:
-  enable: false
+  enable: true
   connectNet: 10.10.
   adressPool: 12.12.12.0
   adressPoolcr: 12.12.12.
@@ -8,10 +8,7 @@ tunnel:
   localDev: ens18
   remoteDev: eth0
   remoteHost: 91.149.218.39
-  test:
-    enable: false
-  standalone:
-    enable: true
+  standalone: true
 
 bgp:
   enable: false
@@ -23,23 +20,11 @@ bgp:
       asn: 66001
       ip: 191.168.111.1
 
-l2:
+test:
   enable: false
-  adressPool: 13.13.13.0
-  adressPrefix: 24
-  localDev: ens18
-
-occlient:
-  enable: false
-  adressPool: 15.15.15.0
-  adressPrefix: 24
-  image: main
-  server: vpn.spongo.ru
-  username: openconnect
-  password: mypassword
+  pool: tunnel #or bgp
+  external: world #label for external service routing
 
 watcher:
   enable: false
   image: latest
-  lbtype: tunnel
-  domain: spongo.ru

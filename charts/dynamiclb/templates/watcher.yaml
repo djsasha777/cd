@@ -32,9 +32,6 @@ spec:
       containers:
         - name: watcher
           image: djsasha777/watcher:{{ .Values.watcher.image }}
-          ports:
-            - containerPort: 80
-              protocol: TCP
           resources:
             limits:
               cpu: '1'
@@ -42,22 +39,4 @@ spec:
             requests:
               cpu: 500m
               memory: 500Mi
-          env:
-          - name: LBTYPE
-            value: {{ .Values.watcher.lbtype }}
-          - name: DOMAIN
-            value: {{ .Values.watcher.domain }}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: watcher
-spec:
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  selector:
-    app: watcher
 {{- end }}
