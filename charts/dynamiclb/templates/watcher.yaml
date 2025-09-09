@@ -39,4 +39,13 @@ spec:
             requests:
               cpu: 500m
               memory: 500Mi
+          env:
+          - name: REPO
+            value: {{ .Values.watcher.repo }}
+          - name: BRANCH
+            value: {{ .Values.watcher.branch }}
+          - name: FILEPATH
+            value: {{ .Values.watcher.filepath }}
+          - name: TOKEN
+            value: {{ .Values.watcher.token }}
 {{- end }}

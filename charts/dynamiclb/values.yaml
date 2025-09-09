@@ -28,3 +28,7 @@ test:
 watcher:
   enable: false
   image: latest
+  repo: https://github.com/djsasha777/infra.git
+  branch: main
+  filepath: infra/ansible/loadbalancer-haproxy/group_vars/all.yaml
+  token: token_for_github_push
