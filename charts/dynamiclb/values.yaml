@@ -32,3 +32,4 @@ watcher:
   branch: main
   filepath: infra/ansible/loadbalancer-haproxy/group_vars/all.yaml
   token: token_for_github_push
+  external: expose
