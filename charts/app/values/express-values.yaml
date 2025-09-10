@@ -8,7 +8,7 @@ application:
   replicaCount: 1
   ingressRoutes:
     - name: mongo-express
-      url: mongo-express.spongo.ru
+      domainUrl: spongo.ru
       path: /
       service: mongo-express
       port: 8081

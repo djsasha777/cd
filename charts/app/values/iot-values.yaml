@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 application:
-  name: iot-test
+  name: iot
   istioInject: false
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
@@ -13,8 +13,8 @@ application:
       port: 9090
   replicaCount: 1
   ingressRoutes:
-    - name: spongo
-      url: iot.spongo.ru
+    - name: iot
+      domainUrl: spongo.ru
       type: letsencript
       path: /
       service: iot-test-svc

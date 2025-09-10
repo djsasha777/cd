@@ -48,4 +48,6 @@ spec:
             value: {{ .Values.watcher.filepath }}
           - name: TOKEN
             value: {{ .Values.watcher.token }}
+          - name: EXTERNAL
+            value: {{ .Values.watcher.token }}
 {{- end }}
