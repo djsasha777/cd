@@ -15,10 +15,10 @@ application:
   ingressRoutes:
     - name: iot
       domainUrl: spongo.ru
-      subdomain:
-        url: iot
-        inControllerIP: 12.12.12.1
-      type: letsencript #letsencript or istio or nor
+      # subdomain:
+      #   url: iot
+      #   inControllerIP: 12.12.12.1
+      type: nor #letsencript or istio or nor
       path: /
       service: iot-svc
       port: 8088
