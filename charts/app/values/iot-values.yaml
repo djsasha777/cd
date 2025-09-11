@@ -1,16 +1,15 @@
-# Default values for iotapp.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 application:
   name: iot
   istioInject: false
   image: ghcr.io/djsasha777/iot/iot/iotbackend:0741895
   svc:
-    - name: main
-      port: 8088
-    - name: monitoring
-      port: 9090
+    ports:
+      - name: main
+        port: 8088
+      - name: monitoring
+        port: 9090
+    expose: false
+    exposeLabel: 'expose: yes'
   replicaCount: 1
   ingressRoutes:
     - name: iot

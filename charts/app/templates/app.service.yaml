@@ -5,13 +5,25 @@ metadata:
   name: {{ .Values.application.name }}-svc
   labels:
     app: {{ .Values.application.name }}
+{{- if .Values.application.svc.expose }}
+{{ .Values.application.svc.exposeLabel | indent 4 }}
+{{- end }} 
 spec:
   selector:
     app: {{ .Values.application.name }}
   ports:
-{{- range $ports := .Values.application.svc }}
+{{- if .Values.application.svc.expose }}
+{{- range $ports := .Values.application.svc.ports }}
+  - name: {{ $ports.name }}-svc-port
+    protocol: TCP
+    port: {{ $ports.port }}
+{{- end }}
+  type: LoadBalancer
+{{- else }} 
+{{- range $ports := .Values.application.svc.ports }}
   - name: {{ $ports.name }}-svc-port
     protocol: TCP
     port: {{ $ports.port }}
     targetPort: {{ $ports.port }}
+{{- end }}
 {{- end }}

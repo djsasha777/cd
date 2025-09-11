@@ -3,8 +3,9 @@ application:
   istioInject: false
   image: mongo-express
   svc:
-    - name: main
-      port: 8081
+    ports:
+      - name: main
+        port: 8081
   replicaCount: 1
   ingressRoutes:
     - name: mongo-express
