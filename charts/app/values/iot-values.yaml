@@ -8,7 +8,7 @@ application:
         port: 8088
       - name: monitoring
         port: 9090
-    expose: true
+    expose: false
     exposeLabel: 'expose: lb'
     pool: tunnel
   replicaCount: 1
