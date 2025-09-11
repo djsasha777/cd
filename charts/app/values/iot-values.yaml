@@ -9,7 +9,7 @@ application:
       - name: monitoring
         port: 9090
     expose: true
-    exposeLabel: 'expose: yes'
+    exposeLabel: 'expose: lb'
     pool: tunnel
   replicaCount: 1
   ingressRoutes:
