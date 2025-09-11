@@ -31,7 +31,7 @@ spec:
             memory: {{ .Values.application.memoryRequest | default "200Mi" }}
             cpu: {{ .Values.application.cpuRequest | default "200m" }}
         ports:
-{{- range $ports := .Values.application.svc }}
+{{- range $ports := .Values.application.svc.ports }}
         - containerPort: {{ $ports.port }}
 {{- end }}
         env:
