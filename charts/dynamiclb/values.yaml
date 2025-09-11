@@ -21,7 +21,7 @@ bgp:
       ip: 191.168.111.1
 
 test:
-  enable: false
+  enable: true
   pool: tunnel #or bgp
   external: "expose: lb" #label for external exposing
 
