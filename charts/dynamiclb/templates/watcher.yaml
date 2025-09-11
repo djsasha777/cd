@@ -32,6 +32,7 @@ spec:
       containers:
         - name: watcher
           image: djsasha777/watcher:{{ .Values.watcher.image }}
+          imagePullPolicy: Always
           resources:
             limits:
               cpu: '1'
