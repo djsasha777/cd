@@ -10,7 +10,11 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 {{- end }}
     kubernetes.io/ingress.class: nginx
-{{ if $routes.letsencript }}
+{{- if $routes.subdomain }}
+    subdomain: {{ $routes.subdomain.url }}
+    inControllerIP: {{ $routes.subdomain.inControllerIP }}
+{{- end }}
+{{ if eq $routes.type "letsencript" }}
     cert-manager.io/cluster-issuer: "letsencrypt-production"
 {{- end }}
 spec:
