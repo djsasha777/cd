@@ -68,7 +68,7 @@ spec:
       volumes:
       - name: script
         configMap:
-          name: tun
+          name: tunnel-cm
       - name: host
         hostPath:
           path: /tmp/install
@@ -77,7 +77,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: tun
+  name: tunnel-cm
 data:
   tunnel.sh: |
     #!/bin/bash
