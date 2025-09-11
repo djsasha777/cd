@@ -26,7 +26,7 @@ test:
   external: "expose: lb" #label for external exposing
 
 watcher:
-  enable: true
+  enable: false
   image: main
   repo: https://github.com/djsasha777/infra.git
   branch: main
