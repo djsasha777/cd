@@ -13,15 +13,15 @@ application:
     pool: tunnel
   replicaCount: 1
   ingressRoutes:
-    - name: iot
-      domainUrl: spongo.ru
-      # subdomain:
-      #   url: iot
-      #   inControllerIP: 12.12.12.1
-      type: nor #letsencript or istio or nor
-      path: /
-      service: iot-svc
-      port: 8088
+    # - name: iot
+    #   domainUrl: spongo.ru
+    #   # subdomain:
+    #   #   url: iot
+    #   #   inControllerIP: 12.12.12.1
+    #   type: nor #letsencript or istio or nor
+    #   path: /
+    #   service: iot-svc
+    #   port: 8088
   env:
     - name: MONGO_MONGODB_USERNAME
       value: mongoiot
