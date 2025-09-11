@@ -23,7 +23,7 @@ bgp:
 test:
   enable: false
   pool: tunnel #or bgp
-  external: world #label for external service routing
+  external: "expose: yes" #label for external exposing
 
 watcher:
   enable: false
@@ -32,4 +32,4 @@ watcher:
   branch: main
   filepath: infra/ansible/loadbalancer-haproxy/group_vars/all.yaml
   token: token_for_github_push
-  external: expose
+  external: "expose: yes"

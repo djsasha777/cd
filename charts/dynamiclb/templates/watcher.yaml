@@ -49,5 +49,5 @@ spec:
           - name: TOKEN
             value: {{ .Values.watcher.token }}
           - name: EXTERNAL
-            value: {{ .Values.watcher.external }}
+            value: '{{ .Values.watcher.external }}'
 {{- end }}
