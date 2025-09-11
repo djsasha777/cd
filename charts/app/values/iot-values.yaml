@@ -10,6 +10,7 @@ application:
         port: 9090
     expose: true
     exposeLabel: 'expose: yes'
+    pool: tunnel
   replicaCount: 1
   ingressRoutes:
     - name: iot
