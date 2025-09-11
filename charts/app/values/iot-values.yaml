@@ -20,7 +20,7 @@ application:
         inControllerIP: 12.12.12.1
       type: letsencript #letsencript or istio or nor
       path: /
-      service: iot-test-svc
+      service: iot-svc
       port: 8088
   env:
     - name: MONGO_MONGODB_USERNAME
