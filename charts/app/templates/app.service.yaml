@@ -5,8 +5,8 @@ metadata:
   labels:
     app: {{ .Values.application.name }}
 {{- if .Values.application.svc.expose }}
-    pool: {{ .Values.application.svc.pool }}
-{{ .Values.application.svc.exposeLabel | indent 4 }}
+    pool: {{ .Values.application.svc.expose.pool }}
+{{ .Values.application.svc.expose.exposeLabel | indent 4 }}
 {{- end }} 
 spec:
   selector:

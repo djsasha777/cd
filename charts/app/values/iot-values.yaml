@@ -8,9 +8,9 @@ application:
         port: 8088
       - name: monitoring
         port: 9090
-    expose: false
-    exposeLabel: 'expose: lb'
-    pool: tunnel
+    # expose:
+    #   exposeLabel: 'expose: lb'
+    #   pool: tunnel
   replicaCount: 1
   ingressRoutes:
     # - name: iot
